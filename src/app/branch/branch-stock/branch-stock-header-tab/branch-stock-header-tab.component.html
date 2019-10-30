@@ -1,0 +1,20 @@
+<div class="cs-table-tabs clr-tab tabs-bg outer-space mt0">
+    <ul>
+        <li><a routerLink="/branch-stock/{{franchise_id}}" routerLinkActive="active" ><p>Fresh Stock</p></a></li>
+        <li><a routerLink="/branch-maintenance/{{franchise_id}}" routerLinkActive="active" ><p>Maintenance Stock</p></a></li>
+        <li><a routerLink="/branch-scrap/{{franchise_id}}" routerLinkActive="active" ><p>Scrap Stock</p></a></li>
+        <li>
+            <a routerLink="/branch-received-stock/{{franchise_id}}" routerLinkActive="active">
+                <p>Stock Receiving </p>
+                <span class="counter white-bg"> {{pending_qty}}</span>
+            </a>
+        </li>
+        <li><a routerLink="/branch-manage-stock/{{franchise_id}}" routerLinkActive="active"><p>Stock History</p></a></li>
+        <li>
+            <a routerLink="/branch-inter-branch-received-stock/{{franchise_id}}" routerLinkActive="active">
+                <p>Branch To Branch </p>
+                <span class="counter white-bg"> {{b_t_b_pending_qty}}</span>
+            </a>
+        </li>
+    </ul>
+</div>

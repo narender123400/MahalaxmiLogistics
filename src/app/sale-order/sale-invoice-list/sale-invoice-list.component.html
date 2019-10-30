@@ -1,0 +1,111 @@
+<div class="main-container"> 
+    <div class="master-heading">
+        <div class="vl-info">
+            <ul>
+                <li><p class="light" (click)="salesOrderList()" style="cursor:pointer;">Total Invoice : <span class="black-clr">{{totalorder}}</span></p></li>
+                <!-- <li><p class="light" (click)="salesOrderList('Active')" style="cursor:pointer;">Active Agreement : <span class="red-clr">{{approved_order}}</span></p></li>
+                    <li><p class="light" (click)="salesOrderList('Expired')" style="cursor:pointer;" > Expired Agreement : <span class="red-clr">{{pendingorder}}</span></p></li> -->
+                </ul>
+            </div>
+            <div class="top-search wp30 ml30">    
+                <input type="text" placeholder="SEARCH. . ." [(ngModel)]="filter.search"  (keyup.enter)="current_page = 1;salesOrderList()">
+                <i class="material-icons">search</i>
+            </div>
+            <div class="top-pagination m-right-data">
+                <ul>
+                    <li><p>Pages {{ current_page }} of {{ last_page }}</p></li>
+                    <li><button mat-button class="left-btn" (click) = 'redirect_previous()'><i class="material-icons">keyboard_arrow_left</i></button></li>
+                    <li><input type="text" placeholder="GO TO"  [(ngModel)]="current_page"  (keyup.enter)="salesOrderList()"></li>
+                    <li><button mat-button class="right-btn"  (click) = 'redirect_next()'><i class="material-icons">keyboard_arrow_right</i></button></li>
+                </ul>
+            </div>
+        </div>
+        <div class="all-container">
+            <div class="cs-row">
+                <div class="right-data">
+                    <div class="cs-spinner full-page" *ngIf = "!loading_list">
+                        <div class="outer">
+                            <div class="innear">
+                                <mat-spinner></mat-spinner>
+                                <P>LOADING . . .</P>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cs-table header-fixed">
+                        <div class="header">
+                            <table class="sno-border">
+                                <tr>
+                                    <th class="w30 border-right-none"></th>
+                                    <th class="w180">
+                                        <div class="filter">
+                                            <mat-form-field class="cs-input cs-date-picker">
+                                                <input placeholder="Date" [(ngModel)]="filter.date"  name="date" matInput (dateChange)="salesOrderList()" [matDatepicker]="picker">
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                    </th>
+                                    <th class="w200">Invoice No.</th>
+                                    <th class="w150">Agreement No.</th>
+                                    <th class="w100">Branch</th>
+                                    <th >Consignor</th>
+                                    <th class="w80">Price</th>
+                                    <th class="w70">IGST</th>
+                                    <th class="w70">CGST</th>
+                                    <th class="w70">SGST</th>
+                                    <th class="w80">Shipping charge</th>
+                                    <th class="w90">Net Amount</th>
+                                    <th class="w100">
+                                        <div class="filter">
+                                            <mat-form-field class="w80">
+                                                <mat-select placeholder="Status" name="status" [(ngModel)] = "filter.status" (selectionChange)="salesOrderList()">
+                                                    <mat-option value="" >All</mat-option>
+                                                    <mat-option value="Pending" >Pending</mat-option>
+                                                    <mat-option value="Received" >Received</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </th>
+                                    <!-- <th class="w60">Print</th> -->
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="table-container">
+                            <div class="table-body">
+                                <table class="sno-border">
+                                    <tr *ngFor = "let receivess of salesinvoiceList; let r = index" > 
+                                        <td class="w30 text-center">{{r+1}}</td>
+                                        <td class="w180">
+                                            <div class="bold-font">
+                                                <span> {{receivess.date_created  | date: 'dd MMM yyyy'}}  </span><p>{{receivess.created_name | titlecase}}</p>
+                                            </div>
+                                        </td>
+                                        <td class="w200"><a mat-button class="link"  routerLink="/sale-invoice-detail/{{receivess.id}}" routerLinkActive="active"> {{receivess.invoice_id}} </a></td>
+                                        <td class="w150"><a mat-button class="link"  routerLinkActive="active"  routerLink="/sale-order-detail/{{receivess.sales_order_id}}" > {{receivess.sales_agg_id}} </a></td>
+                                        <td class="w100"><a mat-button class="link"  routerLinkActive="active"  routerLink="/branch-detail/{{receivess.branch_id}}" > {{receivess.branch_name}} </a></td>
+                                        <td ><a mat-button class="link"  routerLinkActive="active"  routerLink="/consigner-detail/{{receivess.consigner_id}}" > {{receivess.consigner_name}} </a></td>
+                                        <td class="w80">{{receivess.total_amount}}</td>
+                                        <td class="w70">{{receivess.igst}}</td>
+                                        <td class="w70">{{receivess.cgst}}</td>
+                                        <td class="w70">{{receivess.sgst}}</td>
+                                        <td class="w80">{{receivess.shipping_charge}}</td>
+                                        <td class="w90">{{receivess.net_amount}}</td>
+                                        <td class="w100 ft-wt" [ngClass]="{'yellow-clr' : receivess.status == 'Pending' , 'green-clr' : receivess.status == 'Received', 'red-clr' : receivess.status == 'Cancel' } ">{{receivess.status}}
+                                            <div class="action-btns">
+                                                <!-- <a mat-button class="view" routerLink="/edit-challan/{{receivess.id}}" routerLinkActive="active"><i class="material-icons">remove_red_eye</i> Edit</a> -->
+                                                <a mat-button class="delete" *ngIf="receivess.status == 'Pending' " (click)="cancelInvoice(receivess.id)" ><i class="material-icons">cancel</i> Cancel</a>
+                                            </div>     
+                                        </td>
+                                    </tr>                                
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="h100"></div>

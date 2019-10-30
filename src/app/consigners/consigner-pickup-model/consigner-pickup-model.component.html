@@ -1,0 +1,70 @@
+<div class="stock-module">
+    <mat-dialog-content class="convert-franchies-modle pt0">
+        <div class="header top-header left-right-24" style="padding: 0px 10px 10px 10px;">
+          <h1>Consignee Name</h1>
+          <button mat-button color="primary" mat-dialog-close class="mr0"><i class="material-icons">clear</i></button>
+        </div>
+        <div class="m-body form-field">
+          <div class="cs-table left-right-24">
+              <div class="cs-spinner full-page" *ngIf = "loading_list">
+                  <div class="outer">
+                      <div class="innear">
+                          <mat-spinner></mat-spinner>
+                          <P>LOADING . . .</P>
+                      </div>
+                  </div>
+              </div>
+            <div class="header" style="padding: 0px 15px;">
+              <table>
+                <tr>
+                  <th class="w30">&nbsp;</th>
+                  <th class="w150">Equipment Id</th>
+                  <th class="w120">Ready For Pickup</th>
+                  <th class="w120">InTransit Qty</th>
+                  <th class="w120">Picked Qty</th>
+                  <th *ngIf="!part_data.mode" class="w100">Pick Qty</th>
+                </tr>
+              </table>
+            </div>
+            <div class="table-container module-scroll" >
+              <div class="table-body">
+                <table *ngFor="let val of stock_data; let i = index" >
+                  <tr>
+                    <td class="w30">{{i+1}}</td>
+                    <td class="w150">{{val.part_number}}</td>
+                    <td class="w120">{{val.delivered_qty}}</td>
+                    <td class="w120">{{val.intransit_qty}}</td>
+                    <td class="w120">{{val.picked_stock}}</td>
+                    <td class="w100 center-align" *ngIf="!part_data.mode">
+                        <div class="edit-td-input">
+                          <input  type="number" [(ngModel)]="val.pick_stock" (keyup)="val_accept(i)" [name]="'pick_stock'+i" (keypress)="numeric_Number($event)" max="{{val.delivered_qty}}" min="1" required style="background: #f5f5f5;">
+                        </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div> 
+        </div>
+      </mat-dialog-content>
+      
+      
+      <div mat-dialog-actions>
+       <div class="cs-btn wp100 text-right">
+        <div class="in-btn" *ngIf="!part_data.mode">
+          <button type="submit"  (click)="save()" [disabled]="loading_list" class="cs-btn green-btn waves-effect default right mrr30 radius0" mat-raised-button color="warn">Save</button>
+        </div>
+       </div>
+      </div>
+      
+      
+      <!-- ACTIONS BUTTONS -->
+      <!-- 
+      <mat-dialog-actions align="end">
+        <div class="cs-btn fixedd pr10">
+          <div class="in-btn">
+            <button type="submit" mat-raised-button color="warn">Ok</button>
+          </div>
+        </div>
+      </mat-dialog-actions> -->
+</div>

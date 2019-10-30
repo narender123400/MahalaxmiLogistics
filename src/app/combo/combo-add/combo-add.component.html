@@ -1,0 +1,153 @@
+<div class="main-container">
+    <div class="master-heading">
+        <div class="heading">
+            <h1>MASTER's</h1>
+        </div>
+    </div>
+    <div class="cs-container">
+        <div class="cs-row cs-tabs-space">
+            <app-master-add-tabs></app-master-add-tabs>
+            <div class="right-data">
+                <div class="cs-spinner full-page" *ngIf = "loading_list">
+                    <div class="outer">
+                        <div class="innear">
+                            <mat-spinner></mat-spinner>
+                            <P>LOADING . . .</P>
+                        </div>
+                    </div>
+                </div>
+                <form name="finish_good"  #f="ngForm" novalidate>
+                    <div class="contst">
+                        <div class="cs-heading">
+                            <h2>Create Combo</h2>
+                        </div>
+                        <div class="form-field">
+                            <div class="row">
+
+                                    <div class="control-field col-6">
+                                            <mat-form-field class="cs-multi-select">
+                                                <mat-select placeholder="Category" [(ngModel)] = "finish_good.category" #category="ngModel" name="category" required>
+                                                    <mat-option value = "PP Foldable Box" >PP Foldable Box</mat-option>
+                                                    <mat-option value = "PPIN" >PPIN</mat-option>
+                                                    <mat-option value = "PP BOX" >PP BOX</mat-option>
+                                                    <mat-option value = "FLC-128" >FLC-128</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                <div class="control-field col-6">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Combo Name" [(ngModel)]="finish_good.combo_name"  name="combo_name" #combo_name="ngModel" required >
+                                    </mat-form-field>
+                                    
+                                   
+                                </div>
+                                <div class="control-field col-6">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <textarea matInput placeholder="Description" [(ngModel)]="finish_good.desc" name="desc" #desc="ngModel"  class="h130"></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div class="control-field col-6">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Price" [(ngModel)]="finish_good.price" type="number" name="price" #price="ngModel" required >
+                                        </mat-form-field>
+                                </div>
+                                
+                                <div class="control-field col-6">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Alias" [(ngModel)]="finish_good.alias" name="alias" #alias="ngModel" >
+                                        </mat-form-field>
+                                    </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form name="invoiceForm" (ngSubmit)="m.form.valid && addRawMatrialList(m)" #m="ngForm" novalidate>
+                    <div class="contst mt20 mb5">
+                        <div class="cs-heading">
+                            <h2>Add Parts to Cart</h2>
+                        </div>
+                        <div class="form-field">
+                            <div class="row">
+                                <div class="control-field col-3">
+                                    <div class="ng-autocomplete wp100 mt12">
+                                        <label>
+                                                Equipment Id*
+                                        </label>
+                                        <ng-autocomplete 
+                                        [data]="productList"
+                                        [searchKeyword]="keyword"
+                                        (selected)='selectEvent($event)'
+                                        (inputChanged)='onChangeSearch($event)'
+                                        (inputFocused)='onFocused($event)'
+                                        [itemTemplate]="itemTemplate"
+                                        [notFoundTemplate]="notFoundTemplate">                                 
+                                    </ng-autocomplete>
+                                    <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.part_number"></a>
+                                    </ng-template>
+                                    <ng-template #notFoundTemplate let-notFound>
+                                        <div [innerHTML]="notFound"></div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="control-field col-3">
+                                <mat-form-field class="example-full-width cs-input">
+                                    <input matInput placeholder="Qty" [(ngModel)]="raw_material.qty"  name="qty" #qty="ngModel" >
+                                </mat-form-field>
+                            </div>
+                            <div class="control-field col-1">
+                                <div class="plus-btn" style="right: inherit;">
+                                    <button type="submit" mat-raised-button color="warn" class="mt2">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="cs-table mt15" >
+                <div class="header">
+                    <table>
+                        <tr>
+                            <th class="w140">Equipment Id</th>
+                            <th>Size</th>
+                            <th class="w150">Description</th>
+                            <th class="w100 text-right">Purchase Price</th>
+                            <th class="w60 text-center">Qty</th>
+                            <th class="w100 text-right">Total Rental</th>
+                            <th >Description</th>
+                            <th class="w60">Action</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="table-container">
+                    <div class="table-body">
+                        <table>
+                            <tr *ngFor="let raw of rawMatrialList; let p = index">
+                                <td class="w140">{{ raw.part_number }}</td>
+                                <td>{{ raw.dimensions }}</td>
+                                <td class="w150">{{ raw.description }}</td>
+                                <td class="w100 text-right">&#x20B9; {{ raw.price }}</td>
+                                <td class="w60 text-center">{{ raw.qty }}</td>
+                                <td class="w100 text-right">&#x20B9; {{ raw.amount }}</td>
+                                <td >{{ raw.description }}</td>
+                                <td class="w60"><a class="pointer" (click)="RemoveItem(p)"> <i class="material-icons red-clr">delete_sweep</i> </a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="cs-btn fixedd mt15 text-right" [ngClass]="{loading: savingData}" *ngIf="rawMatrialList.length > 0">
+                <div class="in-btn">
+                    <button mat-raised-button color="warn" [attr.disabled]="(f.form.invalid ? true : false ) && savingData" (click)="f.form.valid && saveRawProductList()">save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="h100"></div>

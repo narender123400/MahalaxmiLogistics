@@ -1,0 +1,12 @@
+<div class="master-tabs" >
+  <ul>
+          <li><a routerLink="/branch-detail/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Detail</a></li>
+          <li><a routerLink="/branch-stock/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Stock <span class="counter">{{pending_qty}}</span></a></li>
+          <li><a routerLink="/branch-consigner/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Customer</a></li>
+          <li><a routerLink="/branch-sales-order/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Agreement</a></li>
+          <li><a routerLink="/branch-aggrement-challan/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Challan</a></li>
+          <li><a routerLink="/branch-challan/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Invoice</a></li>
+          <li><a routerLink="/branch-pickup/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Pick Up</a></li>
+
+  </ul>
+</div>

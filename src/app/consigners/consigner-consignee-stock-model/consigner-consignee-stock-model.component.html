@@ -1,0 +1,79 @@
+<div class="stock-module">
+    <mat-dialog-content class="convert-franchies-modle pt0">
+        <div class="header top-header left-right-24" style="padding: 0px 10px 10px 10px;">
+          <h1>Consignee Stock</h1>
+          <button mat-button color="primary" mat-dialog-close class="mr0"><i class="material-icons">clear</i></button>
+        </div>
+        <div class="m-body form-field">
+          <div class="cs-table left-right-24" *ngIf="part_data.mode == '1' ">
+              <div class="cs-spinner full-page" *ngIf = "loading_list">
+                  <div class="outer">
+                      <div class="innear">
+                          <mat-spinner></mat-spinner>
+                          <P>LOADING . . .</P>
+                      </div>
+                  </div>
+              </div>
+            <div class="header" style="padding: 0px 15px;">
+              <table>
+                <tr>
+                  <th class="w30">&nbsp;</th>
+                  <th class="w150">Equipment Id</th>
+                  <!-- <th class="w150">Item Qty</th> -->
+                  <th class="w150">InTransit</th>
+                </tr>
+              </table>
+            </div>
+            <div class="table-container ">
+              <div class="table-body">
+                <table *ngFor="let val of stock_data; let i = index" >
+                  <tr>
+                    <td class="w30">{{i+1}}</td>
+                    <td class="w150">{{val.part_number}}</td>
+                    <!-- <td class="w150">{{val.item_qty}}</td> -->
+                    <td class="w150">{{val.intransit_qty}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div> 
+      
+      
+      
+          <div class="cs-table left-right-24" *ngIf="part_data.mode == '2' ">
+              <div class="cs-spinner full-page" *ngIf = "loading_list">
+                  <div class="outer">
+                      <div class="innear">
+                          <mat-spinner></mat-spinner>
+                          <P>LOADING . . .</P>
+                      </div>
+                  </div>
+              </div>
+            <div class="header" style="padding: 0px 15px;">
+              <table>
+                <tr>
+                  <th class="w30">&nbsp;</th>
+                  <th class="w150">Equipment Id</th>
+                  <!-- <th class="w150">Item Qty</th> -->
+                  <th class="w150">Ready for pickUp</th>
+                </tr>
+              </table>
+            </div>
+            <div class="table-container">
+              <div class="table-body">
+                <table *ngFor="let val of stock_data; let i = index" >
+                  <tr>
+                    <td class="w30">{{i+1}}</td>
+                    <td class="w150">{{val.part_number}}</td>
+                    <!-- <td class="w150">{{val.item_qty}}</td> -->
+                    <td class="w150">{{val.delivered_qty}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div> 
+      
+        </div>
+      </mat-dialog-content>
+      
+</div>

@@ -1,0 +1,293 @@
+<div class="main-container">
+    <div class="cs-spinner full-page" *ngIf = "loading_list">
+        <div class="outer">
+            <div class="innear">
+                <mat-spinner></mat-spinner>
+                <P>LOADING . . .</P>
+            </div>
+        </div>
+    </div>
+    <form name="form" (ngSubmit)="f.form.valid && saveVendor()" #f="ngForm" novalidate>
+        <div class="cs-container">       
+            <div class="row">
+                <div class="col-8">
+                    <div class="right-data pl0">
+                        <div class="contst">                        
+                            <div class="cs-heading">
+                                <h2>Add Vendor : Basic Info</h2>
+                            </div>                        
+                            <div class="form-field">
+                                <div class="row">
+                                    <div class="row">
+                                        
+                                        <div class="col-8 padding0">
+                                            <div class="control-field col-6">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="Company Name" name="company_name" [(ngModel)] = "form.company_name" #company_name="ngModel"  required>
+                                                </mat-form-field>
+                                                <!-- <mat-error *ngIf="f.submitted && !company.valid" >Company Name is required</mat-error> -->
+                                            </div>
+                                            <div class="control-field col-6">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="Email" type="email"  name="email_id" [(ngModel)] = "form.email_id"  #email_id="ngModel" pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" required>
+                                                </mat-form-field>
+                                                <!-- <mat-error *ngIf="f.submitted && !email.valid && f.$error.email" >Email is required</mat-error> -->
+                                            </div>
+                                            <div class="control-field col-6">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="Mobile No" name="phone" maxlength="10" [(ngModel)] = "form.phone" #phone="ngModel" required>
+                                                </mat-form-field>
+                                                <!-- <mat-error *ngIf="f.submitted && !mobile.valid" >Mobile No. is required</mat-error> -->
+                                            </div>
+                                            <div class="control-field col-6">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="Landline No." name="landline" [(ngModel)] = "form.landline" #landline = "ngModel" >
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <div class="col-4 padding0">
+                                            <div class="control-field col-12 ">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder = "Address" name = "address" class="h108" [(ngModel)] = "form.address" #address = "ngModel" required>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="control-field col-4 ">
+                                            <mat-form-field class="example-full-width cs-input">
+                                                
+                                                <input matInput placeholder="Country" class="h41" name="country" readonly="" [value]="countries.name"  [(ngModel)]="form.country_id" #country_id="ngModel">
+                                            </mat-form-field>
+                                        </div>
+                                        
+                                        
+                                        <div class="control-field col-4 " >
+                                            <div *ngIf="form.country_id != 99">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="State" name = "state"   [(ngModel)] = "form.state" #state = "ngModel" required>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="form.country_id == 99">
+                                                <mat-form-field class="cs-multi-select">
+                                                    <mat-select placeholder="Select State" name="state"  (selectionChange)="getDistrictList()" [(ngModel)]="form.state" #state="ngModel" required>
+                                                        <mat-option *ngFor = "let val of states" [value]="val.state_name"> {{val.state_name}} </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="control-field col-4 ">
+                                            <div *ngIf="form.country_id != 99">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder = "District" name = "district"  [(ngModel)] = "form.district" #district = "ngModel" required>                                               
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="form.country_id == 99">
+                                                <mat-form-field class="cs-multi-select">
+                                                    <mat-select placeholder="Select District" name="district"  (selectionChange)="getCityList()"  [(ngModel)]="form.district" #district="ngModel" required>
+                                                        <mat-option *ngFor="let val of districts" [value]="val.district_name"> {{val.district_name}} </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>                                          
+                                        </div>
+                                        
+                                        
+                                        <div class="control-field col-4 ">
+                                            <!-- <div *ngIf="form.country_id != 99"> -->
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder = "City" name = "city"  [(ngModel)] = "form.city" #city = "ngModel" required>                                               
+                                                </mat-form-field>
+                                                <!-- </div> -->
+                                                <!-- <div *ngIf="form.country_id == 99">
+                                                    <mat-form-field class="cs-multi-select">
+                                                        <mat-select placeholder="Select City" name="city"  [(ngModel)]="form.city" #city="ngModel" required>
+                                                            <mat-option *ngFor="let val of cities" [value]="val.city"> {{val.city}} </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>                                           -->
+                                            </div>
+                                            <div class="control-field col-4 ">
+                                                <div *ngIf="form.country_id != 99">
+                                                    <mat-form-field class="example-full-width cs-input">
+                                                        <input matInput placeholder = "Pincode" name = "pincode"  [(ngModel)] = "form.pincode" #pincode = "ngModel" required>                                               
+                                                    </mat-form-field>
+                                                </div>
+                                                <div *ngIf="form.country_id == 99">
+                                                    <mat-form-field class="cs-multi-select">
+                                                        <mat-select placeholder="Select Pincode" name="pincode"  [(ngModel)]="form.pincode" #pincode="ngModel" required>
+                                                            <mat-option *ngFor="let val of pincodes" [value]="val.pincode"> {{val.pincode}} </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>                                          
+                                            </div>
+             
+                                            <div class="control-field col-4 ">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="PAN No." name = "pan_no" [(ngModel)] = "form.pan_no" #pan_no = "ngModel" >
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="control-field col-4 ">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="GST No." name = "gst_no" [(ngModel)] = "form.gst_no" #gst_no = "ngModel" >
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="control-field col-4 ">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="GST Percentage" name = "gst_percentage" [(ngModel)] = "form.gst_percentage" #gst_percentage = "ngModel" >
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="control-field col-4 ">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="Matreial Type" name ="meterial_type" [(ngModel)] = "form.meterial_type" #meterial_type = "ngModel" >
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="control-field col-4 ">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="HSN Code" name ="hsn_code" [(ngModel)] = "form.hsn_code" #hsn_code = "ngModel" >
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>                            
+                                    <div class="cs-divider pt20 left-right-15">
+                                        <mat-divider></mat-divider>
+                                    </div>
+                                    <div class="cs-heading mt20">
+                                        <h2>CONTACT PERSON</h2>
+                                    </div>
+                                    <div class="row sprate-box">
+                                        <div class="control-field col-4 ">
+                                            <mat-form-field class="example-full-width cs-input">
+                                                <input matInput placeholder="Name" name="name1" [(ngModel)] = "form.name1" #name1 = "ngModel">                                        
+                                            </mat-form-field>
+                                        </div>                                
+                                        <div class="control-field col-4 ">
+                                            <mat-form-field class="example-full-width cs-input">
+                                                <input matInput placeholder="Mobile" name = "mobile1" [(ngModel)] = "form.mobile1" #mobile1 = "ngModel" maxlength="10"  >
+                                            </mat-form-field>
+                                        </div>                                
+                                        <div class="control-field col-4 pr70 ">
+                                            <!-- <mat-form-field class="example-full-width cs-input">
+                                                <input matInput placeholder="Mobile-2" name = "mobile2" [(ngModel)] = "form.mobile2" #mobile2 = "ngModel" maxlength="10">
+                                            </mat-form-field>                                         -->
+                                            <div class="plus-btn">
+                                                <a mat-raised-button color="warn" (click)="storeVendordetailData(name1.value,mobile1.value)">
+                                                    <i class="material-icons">add</i>
+                                                </a>
+                                            </div>
+                                        </div>                                
+                                        <div class="cs-table" *ngIf="!!contactData?.length">
+                                            <div class="header">
+                                                <table>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Mobile 1</th>
+                                                        <!-- <th>Mobile 2</th> -->
+                                                        <th class="w100">&nbsp;</th>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="table-container">
+                                                <div class="table-body">
+                                                    <table>
+                                                        <tr *ngFor="let data of contactData;  let i = index">
+                                                            <td>{{ data.contact_name }}</td>
+                                                            <td>{{ data.mobile1 }}</td>
+                                                            <!-- <td>{{ data.mobile2 }}</td> -->
+                                                            <td class="delete-icon text-center w100">
+                                                                <p mat-button color="primary" (click)="removeVendordetailData(i)">
+                                                                    <i class="material-icons">delete_sweep</i>
+                                                                </p>
+                                                            </td>
+                                                        </tr>           
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                        
+                            </div>                    
+                        </div>
+                    </div>            
+                    <div class="col-4">
+                        <div class="right-data">
+                            <div class="contst">
+                                <!-- <div class="cs-heading">
+                                    <h2>Add Vendor : Dealing With</h2>
+                                    <input type="text" placeholder="search..."  (input)="getPartCheckin(search2.search3)" #search1="ngModel" name="search3" [(ngModel)]="search2.search3">
+                                </div>    -->
+                                
+                                
+                                
+                                
+                                
+                                <div class="csn-heading"  [ngClass]="{'active':active.user==true}">
+                                    
+                                    <h2>Add Vendor : Dealing With {{part_deal}} Parts</h2>
+                                    
+                                    <p class="search-icon" (click)="toggleterritory('user','open')" >
+                                        <i class="material-icons">search</i>
+                                    </p>
+                                    
+                                    <div class="search">
+                                        
+                                        <i class="material-icons sc-icon">search</i>
+                                        <input style="width: 100% !important;" type="text" placeholder="search..."   (input)="getPartCheckin(search2.search3)" #search1="ngModel" name="search3" [(ngModel)]="search2.search3">
+                                        
+                                        <p (click)="toggleterritory('user','close')">
+                                            <i class="material-icons">clear</i>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="cs-divider pt10 pb10">
+                                    <mat-divider></mat-divider>
+                                </div>
+                                
+                                <mat-dialog-content class="convert-franchies-modle">
+                                    <div class="m-body pr15">
+                                        <div class="row">
+                                            <div class="col-12 plan-list step1 shadow-none">
+                                                <!-- <div class="head">
+                                                    <div class="cs-heading">
+                                                        <h2>Franchise Plan</h2>
+                                                    </div>
+                                                    
+                                                    <div class="search">
+                                                        <button mat-button><i class="material-icons">search</i></button>
+                                                    </div>
+                                                </div> -->                                            
+                                                <div class="listing">  
+                                                    <ul class="checkbox-list">
+                                                        <li *ngFor="let productss of productslists; let  g = index" >
+                                                            <label>
+                                                                <div class="txt-box">
+                                                                    <p>
+                                                                        <span class="cs-head">Equipment Id</span>
+                                                                        {{productss.part_number}}
+                                                                    </p>  
+                                                                    <p><span class="cs-head">Size</span>{{productss.dimensions}}</p>
+                                                                </div>
+                                                                <mat-checkbox class="cs-check" (change)="countPart()" [name]="'deal'+g" [(ngModel)]="productss.deal" [value]="productss.pro_id" #deal="ngModel" style="width:10%;display: inline-block;"></mat-checkbox>
+                                                            </label>
+                                                        </li>                                                    
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-dialog-content>
+                            </div>                        
+                            <div class="cs-btn fixedd mt32 text-right" [ngClass]="{loading: sendingData}">
+                                <div class="in-btn">
+                                    <button mat-raised-button color="primary" [attr.disabled]="sendingData">Save</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>        
+                <div class="h100"></div>
+            </div>
+        </form>
+    </div>

@@ -1,0 +1,178 @@
+<div class="main-container">
+	<div class="master-heading bcspace">
+		<div class="back-btn">
+			<a mat-button (click)="db.goBack()" ><i class="material-icons">arrow_right_alt</i></a>
+		</div>
+		<div class="vl-info">
+			<ul>
+				<li><p><span>{{db.franchise_name}}</span></p></li>
+				<!-- <li><p class="light">Customers : <span style="color: #000;">25</span></p></li> -->
+				<!-- <li class="af-none"><p class="light">Orders : <span style="color: #000;">35/<strong style="color: #ED3237;">12</strong></span></p></li> -->
+				<li class="af-none" *ngIf="db.datauser.branch_id == '0'"><a mat-button  color="warn" class="edit-page"   (click)="edit()"><i class="material-icons"  >create</i></a></li>
+			</ul>
+		</div>
+		
+		
+	</div>
+	<div class="cs-container">
+		<div class="cs-row cs-tabs-space">
+			<!-- TABS Component -->
+			<app-branch-left-tab *ngIf="db.datauser.branch_id == 0 "></app-branch-left-tab>
+			
+			<!-- TABS Component -->
+			<!-- pl0 -->
+			<div class="right-data " [ngClass]="{'pl0' : db.datauser.branch_id}">
+				<div class="cs-spinner full-page" *ngIf="loading_list">
+					<div class="outer">
+						<div class="innear">
+							<mat-spinner></mat-spinner>
+							<!-- <P>LOADING . . .</P> -->
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="row">
+					<div class="col-8">
+						<div class="contst">
+							<div class="cs-heading ">
+								<h2>Branch Detail</h2>
+							</div>
+							
+							<div class="side-by-side mt10" style="display: inherit;">
+								<div class="row mr0">
+									<div class="figure grid-two">
+										<p>Branch Name</p>
+										<p>{{getData.branch_name}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Branch Code</p>
+										<p>{{getData.branch_code}}</p>
+									</div>
+									<div class="figure grid-two">
+											<p>Pan Number</p>
+											<p>{{getData.branch_pan_no}}</p>
+										</div>
+										<div class="figure grid-two">
+											<p>GST Number</p>
+											<p>{{getData.branch_gstin}}</p>
+										</div>
+								</div>
+							</div>
+							
+							<div class="cs-heading ">
+								<h2>Contact Details</h2>
+							</div>
+							
+							<div class="side-by-side mt10" style="display: inherit;">
+								<div class="row mr0">
+									<div class="figure grid-two">
+										<p>Contact</p>
+										<p>{{getData.contact_name}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Email</p>
+										<p>{{getData.contact_email}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Mobile No.</p>
+										<p>{{getData.contact_no}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Country</p>
+										<p>{{getData.country_name}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>State</p>
+										<p>{{getData.state}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>District</p>
+										<p>{{getData.district}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>City</p>
+										<p>{{getData.city}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Pincode</p>
+										<p>{{getData.pincode}}</p>
+									</div>
+
+
+									<div class="figure grid-two">
+										<p>Address</p>
+										<p>{{getData.address}}</p>
+									</div>
+
+								</div>
+							</div>
+							
+							
+						</div>
+					</div>
+					<div class="col-4" *ngIf="false">
+						<div class="right-data">
+							<div class="contst left-calls-info">
+								<div class="cs-heading">
+									<h2 (click)="currentdeals()">DEALING WITH</h2>
+									<p><a mat-button (click)="remainingdeals()" class="font13 blc" style="margin-top: -10px;" *ngIf="vendor_redeal.length" >Add New Product</a></p>
+								</div>                      
+								<ul *ngIf="current_deal">
+									<li *ngFor="let deals of vendor_deal; let y = index">
+										<div class="head">
+											<p class="name">
+												{{deals.part_number}}<br>
+												{{deals.sale_price}}<br>
+												<span>{{deals.dimensions}}</span>
+											</p>                                        
+											<p class="date">
+												<!-- <mat-checkbox class="cs-check" value={{deals.pro_id}} style="width:10%;display: inline-block;" 
+													(change)="update_vendor_deal_remove(deals.pro_id)"
+													name = "deal_pro_id"
+													checked=true></mat-checkbox>  -->
+													<a mat-button class="font12"  (click)="update_vendor_deal_remove(deals.id)">Remove</a> 
+												</p>
+											</div>
+										</li>
+									</ul>
+									
+									<!-- Add product Data -->
+									<mat-dialog-content class="convert-franchies-modle" *ngIf="remaining_deal">
+										<div class="m-body">
+											<div class="row">
+												<div class="col-12 plan-list step1 shadow-none" style="background: transparent;">
+													<div class="listing">  
+														<ul class="checkbox-list pr15">
+															<li class="pt15" *ngFor="let productss of vendor_redeal; let  z=index" >
+																<label>
+																	<div class="txt-box">
+																		<p>
+																			{{productss.part_number}}<br>
+																			{{productss.sale_price}}<br>
+																			<span>{{productss.dimensions}}</span>
+																		</p>                                           
+																	</div>
+																	<mat-checkbox class="cs-check" value={{productss.pro_id}} (change)="update_vendor_deal_add(productss.id,productss.part_number)"
+																	name = "deal_pro_id"
+																	style="width:5%;display: inline-block;"></mat-checkbox>
+																</label>
+															</li>                                                    
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</mat-dialog-content>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="h100"></div>
+		</div>
+	</div>
+	
+	<div class="h100"></div>
+	

@@ -1,0 +1,78 @@
+<div class="main-container">    
+    <div class="master-heading">
+        <div class="vl-info">
+            <ul>
+                <li><p>Total Vendors : <span>{{vendor_count}}</span></p></li>
+                <li><p>Active : <span class="green-clr">{{vendor_count}}</span></p></li>
+            </ul>
+        </div>
+        <div class="top-search wp30 ml30">
+            <input type="text" placeholder="SEARCH. . ." [(ngModel)]="filter.search"  (keyup.enter)="current_page = 1;getVendorList()">
+            <i class="material-icons">search</i>
+        </div>
+        <div class="top-pagination m-right-data">
+            <ul>
+                <li><p>Pages {{ current_page }} of {{ last_page }}</p></li>
+                <li><button mat-button class="left-btn" (click) = 'redirect_previous()'><i class="material-icons">keyboard_arrow_left</i></button></li>
+                <li><input type="text" placeholder="GO TO" [(ngModel)]="current_page"  (keyup.enter)="getVendorList()"></li>
+                <li><button mat-button class="right-btn" (click) = 'redirect_next()'><i class="material-icons">keyboard_arrow_right</i></button></li>
+            </ul>
+        </div>
+    </div>
+    <div class="all-container" *ngIf = "loading_page">
+        <div class="cs-row">
+            <div class="cs-spinner full-page" *ngIf = "!loading_list">
+                <div class="outer">
+                    <div class="innear">
+                        <mat-spinner></mat-spinner>
+                        <P>LOADING . . .</P>
+                    </div>
+                </div>
+            </div>
+            <div class="right-data" *ngIf='loading_list && searchData && (vendors.length > 0 || filtering)'>
+                <div class="cs-table header-fixed">
+                    <div class="header">
+                        <table class="sno-border">
+                            <tr>
+                                <th class="w30 border-right-none"></th>
+                                <th class="w210">
+                                        <div class="filter">
+                                                <mat-form-field class="cs-input cs-date-picker">
+                                                <input placeholder="Create By/Date" [(ngModel)]="filter.date" name="date" matInput (dateChange)="getVendorList()" [matDatepicker]="picker">
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                </th>
+                                <th class="w200">Company Name </th>
+                                <th class="w120">Mobile no</th>
+                                <th>Address</th>
+                                <th class="w130">Total Deal's Item</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-container">
+                        <div class="table-body">
+                            <table class="sno-border">                                
+                                <tr *ngFor="let vendor of vendors; let i = index">
+                                    <td class="w30 border-right-none">{{ ( (current_page - 1 ) * 20 ) + ( i+1 ) }}</td>
+                                    <td class="w210">{{vendor.created_at  | date: 'dd MMM yyyy' }} /  {{vendor.created_name}}</td>   
+                                    <td class="w200"><a mat-button class="link" routerLink="/vendors/vendor-detail/{{vendor.id}}" routerLinkActive="active">{{vendor.company_name}}</a></td>                                
+                                    <td class="w120">  {{vendor.phone}}</td> 
+                                    <td class="no-wrap">{{ vendor.address }},{{ vendor.city }},{{ vendor.district }},{{ vendor.state }},{{ vendor.country }}</td> 
+                                    <td class="w130">{{ vendor.total_deals }}
+                                        <div class="action-btns">
+                                            <button mat-button class="delete" (click) = "deleteVendors(vendor.id)"><i class="material-icons">delete_sweep</i> Delete</button>
+                                        </div>     
+                                    </td> 
+                                </tr>
+                                <tr *ngIf="vendors.length < 1">No data found</tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>                 
+            </div>
+        </div>
+    </div>
+</div>
+<div class="h100"></div>

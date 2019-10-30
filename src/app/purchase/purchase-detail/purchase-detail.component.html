@@ -1,0 +1,1442 @@
+<div class="main-container">
+    <div class="master-heading bcspace">
+        <div class="back-btn">
+            <a mat-button (click)="db.goBack()"><i class="material-icons">arrow_right_alt</i></a>
+        </div>
+        <div class="vl-info">
+            <ul>  
+                <li><p class="light">Order ID : <span class="blue"> {{orderdetail.invoice_id}}</span></p></li>
+                <li><p class="light">Date Created : <span class="black-clr"> {{orderdetail.date_created}}</span></p></li>
+                <li><p class="light">Status : <span class="yellow-clr" style="text-transform: uppercase;"> {{orderdetail.receive_status}}</span></p></li>
+                <li><p class="light">GST : <span class="black-clr">{{orderdetail.gst_data }} ({{ orderdetail.gst}})%</span></p></li>
+                <li><p class="light">Amount : <span class="black-clr"> &#8377; {{orderdetail.order_total}}</span></p></li>
+                <!-- <li><p class="light">HSN Code : <span class="black-clr">{{orderdetail.hsn_code}}</span></p></li>
+                    <li><p class="light">Material Type : <span class="black-clr">{{orderdetail.material_type}}</span></p></li> -->
+                    <li class="af-none" *ngIf="pendingqty">
+                        <p class="light"> 
+                            Pending Qty 
+                            <span class="black-clr">{{pendingqty}}</span>
+                        </p>
+                    </li>   
+                    
+                    <li class="af-none">
+                        <p class="light"> 
+                            Receive QTY: 
+                            <span class="green-clr">{{receiveqty}}/</span>
+                            <span class="black-clr">{{qty}}</span>
+                        </p>
+                    </li>   
+                    
+                    <li class="af-none" *ngIf="rejectqty">
+                        <p class="light"> 
+                            Reject Qty 
+                            <span class="black-clr">{{rejectqty}}</span>
+                        </p>
+                    </li>   
+                    
+                    
+                    
+                </ul>
+            </div>        
+            <div class="m-right-data vl-info">
+                <ul>                
+                    <li class="af-none">
+                        <button class="ac-btn link" mat-button [matMenuTriggerFor]="menu">
+                            Action
+                            <i class="material-icons icon black-clr " style="right: 0px;left: inherit;">arrow_drop_down</i>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <a *ngIf = "orderdetail.receive_status=='Pending'"  routerLink="/purchases/{{orderdetail.id}}/receive" routerLinkActive="active" mat-menu-item>Order Received</a>
+                            <a *ngIf = "receiveqty != '0' " (click) ="cancel(id)" mat-menu-item>Cancel</a>
+                        </mat-menu>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="cs-container detail">
+            <div class="cs-spinner full-page" *ngIf = "!loading_list">
+                <div class="outer">
+                    <div class="innear">
+                        <mat-spinner></mat-spinner>
+                        <P>LOADING . . .</P>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <div class="right-data pl0">
+                        <div class="contst">
+                            <div class="cs-heading">
+                                <h2>{{orderdetail.company_name}}</h2>
+                                <p><i class="material-icons ic-watch">watch_later</i>{{orderdetail.date_created  | date: 'dd MMM yyyy'}}</p>
+                            </div>
+                            <div class="cs-divider pt10">
+                                <mat-divider></mat-divider>
+                            </div>                        
+                            <div class="form-field">
+                                <div class="row">
+                                    <div class="control-field col-6" style="padding-top: 0px !important;">
+                                        <div class="row">
+                                            <div class="control-field col-12">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="company Name" readonly="" [(ngModel)]="form.company_name">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="control-field col-12">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="Mobile No" [(ngModel)]="form.mobile" readonly="">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="control-field col-12">
+                                                <mat-form-field class="example-full-width cs-input">
+                                                    <input matInput placeholder="HSN Code" [(ngModel)]="form.hsn_code" readonly="">
+                                                </mat-form-field>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="control-field col-6">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <textarea matInput placeholder="ADDRESS"  [(ngModel)]="form.address" readonly="" class="h110"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                    
+                                    <div class="control-field col-6">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Material Type" [(ngModel)]="form.material_type" readonly="">
+                                        </mat-form-field>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                                <div class="cs-divider pt20 left-right-15">
+                                    <mat-divider></mat-divider>
+                                </div>
+                                <div class="cs-heading mt20">
+                                    <h2>CONTACT PERSON DETAILS</h2>
+                                </div>
+                                <div class="row" *ngFor="let v_contacts of v_contact; let r = index">
+                                    <div class="col-12">
+                                        <div class="">
+                                            <div class="row">
+                                                <div class="control-field col-4">
+                                                    <mat-form-field class="example-full-width cs-input">
+                                                        <input matInput placeholder="Name" [(ngModel)]="v_contacts.name"  readonly="" >
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="control-field col-4">
+                                                    <mat-form-field class="example-full-width cs-input">
+                                                        <input matInput placeholder="MOBILE 1" [(ngModel)]="v_contacts.phone1" readonly="">
+                                                    </mat-form-field>
+                                                </div>
+                                                <!-- <div class="control-field col-4">
+                                                    <mat-form-field class="example-full-width cs-input">
+                                                        <input matInput placeholder="MOBILE 2" [(ngModel)]="v_contacts.phone2" readonly="">
+                                                    </mat-form-field>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="cs-heading mt20 mb10">
+                        <h2>ITEM DETAIL</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="cs-table left-right-15">
+                        <div class="header">
+                            <table>
+                                <tr>
+                                    <th class="w140">Equipment Id</th>
+                                    <th class="w200">Size</th>
+                                    <th >Description</th>
+                                    <th class="w140">Prchase Price</th>
+                                    <th class="w100">Qty</th>
+                                    <th class="w140 text-right">Total Amount</th>
+                                    <th class="w140">Pending Qty</th>
+                                    <th class="w140">Accept Qty</th>
+                                    <th class="w140">Reject Qty</th>
+                                    
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-body">
+                                <table>
+                                    <tr *ngFor="let val of itemdetail; let s = index">
+                                        <td class="w140">{{ val.part_number }}</td>
+                                        <td  class="w200" >{{ val.dimensions }}</td>
+                                        <td>{{ val.description }}</td>
+                                        <td class="w140 ">&#8377; {{val.rate}}
+                                            <td class="w100">{{ val.qty }}</td>
+                                            <td class="w140 text-right">&#8377; {{val.item_total}}</td>
+                                            <td class="w140 ">{{val.pending_qty}}</td>
+                                            <td class="w140 ">{{val.accepted_qty}}</td>
+                                            <td class="w140 ">{{val.rejected_qty}}</td>
+                                            
+                                        </tr>
+                                        
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row" *ngIf="orderreceive.length > 0">
+                    <div class="col-12">
+                        <div class="cs-heading mt20 mb10">
+                            <h2>RECEIVED ITEM DETAILS</h2>
+                        </div>
+                        
+                        <div class="cs-table left-right-15">
+                            <div class="header">
+                                <table class="sno-border">
+                                    <tr>
+                                        <th class="w30 border-right-none"></th>
+                                        <th class="w180">Date / Created By</th>
+                                        <th class="w120 text-center">Receive No.</th>
+                                        <th class="w80">Invoice No.</th>
+                                        <th class="w80 text-right">Amount</th>
+                                        <th class="padding0">
+                                            <table>
+                                                <tr>
+                                                    <th class="w110" style="border-right: solid 1px #D2D2D2 !important;">Equipment Id</th>
+                                                    <th class="w120">Size</th>
+                                                    <th  class="w80">Purchase Price</th>
+                                                    <th  class="w50">Accept Qty</th>
+                                                    <th  class="w50">Reject Qty</th>
+                                                    <th  class="w80 text-right">Amount</th>
+                                                </tr>
+                                            </table>
+                                        </th>
+                                        <th class="w80">Item Total</th>
+                                        <th class="w80">IGST</th>
+                                        <th class="w80">CGST</th>
+                                        <th class="w80">SGST</th>
+                                        <th class="w80">Net Amount</th>
+                                        <th class="w50">Action</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-container">
+                                <div class="table-body">
+                                    <table class="sno-border">
+                                        <tr *ngFor = "let receivess of orderreceive; let r = index" > 
+                                            <td class="w30 text-center">{{r+1}}</td>
+                                            <td class="w180">{{receivess.invoice_date  | date: 'dd MMM yyyy'}} / {{receivess.created_by_type}}</td>
+                                            <td class="w120 text-center"><a  mat-button class="link" routerLink="/received-purchase-ord-detail/{{receivess.id}}" routerLinkActive="active">{{receivess.invoice_id}}</a></td>
+                                            <td class="w80"><a *ngIf="receivess.attechment"  class="link" href="{{db.myurl}}app/uploads/{{receivess.attechment}}"  target="_blank">{{receivess.invoice_no}}</a>   {{ !receivess.attechment ? receivess.invoice_no : ''  }}   </td>
+                                            <td class="w80 text-right">&#8377; {{receivess.invoice_amt}}</td>
+                                            <td class="padding0">
+                                                <table>
+                                                    <ng-container *ngFor="let val of allitem; let i = index">                                            
+                                                        <ng-container *ngIf="val.receive_id == receivess.id">
+                                                            <tr>
+                                                                <td class="w110" style="border-right: solid 1px #D2D2D2 !important;">{{ val.part_number }}</td>
+                                                                <td class="w120">{{ val.dimensions }}</td>
+                                                                <td class="w80">&#8377; {{ val.rate }} </td>
+                                                                <td class="w50">{{ val.accept_qty }} </td>
+                                                                <td class="w50">{{ val.reject_qty }}</td>
+                                                                <td class="w80 text-right">&#8377; {{ val.amount }} </td>
+                                                            </tr>
+                                                        </ng-container>
+                                                    </ng-container> 
+                                                </table>
+                                            </td>
+                                            <td class="w90">&#8377; {{receivess.total_amount}}</td>
+                                            <td class="w80" >&#8377; {{receivess.igst}}</td>
+                                            <td class="w80" >&#8377; {{receivess.cgst}}</td>
+                                            <td class="w80" >&#8377; {{receivess.sgst}}</td>
+                                            <td class="w80">&#8377; {{receivess.net_amount}}</td>
+                                            <td class="w50"><a  class="print-btn" (click)="print2(r)"><i class="material-icons green-clr">print</i></a></td>
+                                        </tr>                                
+                                    </table>
+                                </div>
+                            </div>
+                        </div>     
+                    </div>
+                </div>
+            </div>
+            
+            <div class="fix-btn-group">
+                <ul>
+                    <li (click)=print1()>
+                        <a class="botm-btn"><i class="material-icons ">print</i></a>
+                    </li>
+                </ul>
+            </div>    
+        </div>
+        
+        
+        <div id="print-section1" hidden >
+            <table width="1024px" style=" font-family:arial; border: solid 10px #DA251C; border-bottom: solid 1px #ccc; display:block;  margin: 0; margin: 0 auto; border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                <tr>
+                    <td  width="984" style=" padding: 0px 20px; height: 50px; text-align: center;">
+                        <h2 style=" color: #000;text-transform: capitalize; border-bottom: solid 2px #000; display: inline;"> Purchase Order </h2>
+                    </td>
+                </tr>
+                <!-- <tr>
+                    <td  width="984px" style="padding: 0px 20px;">
+                        <table width="944"  style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                            <tr>
+                                <td width="461">
+                                    <table  width="461" style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                        <tr>
+                                            <td style="display: flex;">
+                                                <div class="logo">
+                                                    <img src="/assets/img/logo/logo.png" style="width: 100px; margin-top: -42px;">
+                                                </div>
+                                                <div class="company-name" style="padding-left: 15px">
+                                                    <h3 style="font-size: 18px; color: #000; font-weight:900; margin: 4px 0px; ">Mahalakshmi Logistics PVT. LTD.</h3>
+                                                    <p style="margin: 0; font-size: 13px; color: #000;">An ISO 9001 : 2008 Certified Company</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    
+                                    <table width="461" border="1"  cellpadding="0" bordercolor='#DA251C'   style="  margin: 20px 0px ; border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                        <tr >
+                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                                <p style="padding: 10px; margin: 0px;"> Address</p>
+                                            </th>
+                                            
+                                            
+                                            <td width="361" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                <p style="padding: 10px; margin: 0px;">Corp Office : 53/03 , Head Office : Plot No. 53/10 , NIT , Faridabad</p>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                                <p style="padding: 10px; margin: 0px;">Phone</p>
+                                            </th>
+                                            
+                                            <td width="361" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                <table width="361" border="0.5"    bordercolor='#DA251C' style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                                    <tr>
+                                                        <td  style="font-size:12px; "><p style="padding: 10px">0129-4227700</p></td>
+                                                        <td  width="100" style="font-size: 12px; background: #FBE8E7; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #da251c;"><p style="padding: 10px">Mobile No.</p></td>
+                                                        <td width="100" style="font-size:12px;"><p style="padding: 10px">9810430006</p></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr >
+                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                                <p style="padding: 10px; margin: 0px;"> E-Mail</p>
+                                            </th>
+                                            
+                                            
+                                            <td width="361" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                <p style="padding: 10px; margin: 0px;">fbd@mahalakshmilogistics.com</p>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                                <p style="padding: 10px; margin: 0px;"> Website</p>
+                                            </th>
+                                            
+                                            
+                                            <td width="361" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                <p style="padding: 10px; margin: 0px;">www.mahalakshmilogistics.com</p>
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+                                </td>
+                                <td  style="vertical-align: top; width: 100%; padding-left: 13px;">
+                                    
+                                    <table width="450" style=" border-collapse: collapse; margin: 9px 0;">
+                                        <tr>
+                                            <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Bill From</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="450" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                                <table width="450" border="1"  cellpadding="0" style="border-color: #727272;  border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                    
+                                                    <tr >
+                                                        <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Vendor</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{orderdetail.company_name}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr >
+                                                        <th width="100"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Name</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{v_contact[0].name}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Mobile No.</p>
+                                                        </th>
+                                                        
+                                                        <td width="353" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                            <table width="353"  style="border: 0px; border-color: #ccc; border-collapse: collapse;  box-sizing: border-box;">
+                                                                <tr>
+                                                                    <td width="133" style="font-size:12px; "><p style="padding: 10px">{{v_contact[0].phone1}}</p></td>
+                                                                    <td width="100"  style="font-size: 12px; background: #DCDCDC; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #B5B5B5;"><p style="padding: 10px">GST No.</p></td>
+                                                                    <td width="120" style="font-size:12px;"><p style="padding: 10px">{{orderdetail.gst_no}}</p></td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                            <p style="padding: 10px; margin: 0px;"> Address</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="352" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{orderdetail.addrress}} {{orderdetail.state}} {{orderdetail.district}} {{orderdetail.city}} - {{orderdetail.pincode}}</p>
+                                                        </td>
+                                                    </tr>   
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr> -->
+                
+                <tr>
+                    <td  width="984px" style="padding: 0px 20px;">
+                        <table width="944"  style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                            
+                            <tr>
+                                <td>
+                                    <table  width="944" style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                        <tr>
+                                            <td style="display: flex;">
+                                                <div class="logo">
+                                                    <img src="/assets/img/logo/logo.png" style="width: 100px;     margin: 15px 0px;">
+                                                </div>
+                                                <div class="company-name" style="padding-left: 33px;">
+                                                    <h3 style="font-size:  47px; text-align: center; color: #da251c; font-weight:600; margin: 4px 0px; font-family: 'Berkshire Swash', cursive;">Mahalakshmi Logistics PVT. LTD.</h3>
+                                                    <p style="margin: 0; font-size: 14px; color: #000; text-align: center;     font-weight: bold;">(An ISO 9001 : 2008 Certified Company)</p>
+                                                    <p style="font-size: 12px; text-align: center; text-transform: capitalize;  line-height: 0px;  padding-bottom: 6px; ">Plot No 53/10 Industrial Area (Near Friends Auto) N.I.T. Faridabad (Haryana-121001) 
+                                                    </p>
+                                                    <p style="font-size: 12px; text-align: center; text-transform: capitalize; padding-bottom: 6px; line-height: 0px;">Corp Office : 53/03 , Head Office : Plot No. 53/10 , NIT , Faridabad</p>
+                                                    <p style="font-size: 12px; text-align: center; text-transform: capitalize; padding-bottom: 6px; line-height: 0px;"><span style="font-weight: 600;">Phone:  </span>0129-422700-18 <span style="    font-weight: bold;
+                                                        padding: 0px 2px;">GST NO</span>06AADCM8862E1ZD <span style="font-weight: bold;  padding: 0px 2px;"
+                                                        >PAN NO</span> AADCM8862E</p>
+                                                        <!-- <p style="font-size: 12px; text-align: center; text-transform: capitalize;  line-height: 0px;"><span style="font-weight: 600;">   E-mail: </span>fbd@mahalakshmilogistics.com<span style=" padding: 0px 2px; font-weight: bold;"> Website :</span>  www.mahalakshmilogistics.com </p> -->
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                            </tr>
+                                <tr>
+                                    
+                                    <td width="400" style="vertical-align: top">
+                                        
+                                        <table width="400" style=" border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Purchase Information</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="440" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                                    <table width="440" border="1" cellpadding="0" bordercolor='#B5B5B5'   style="   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        
+                                                        <tr >
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Order No.</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.invoice_id}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Date</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.date_created | date: 'dd MMM yyyy'}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Status</p>
+                                                            </th>
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                                <p style="padding: 10px; margin: 0px; ">{{orderdetail.receive_status}}</p>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr *ngIf="orderdetail.hsn_code">
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> HSN Code</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.hsn_code}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                        <tr *ngIf="orderdetail.material_type">
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> Material Type</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.material_type}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </td>
+                                    <td width="461" style="vertical-align: top">
+                                        
+                                        <table width="461" style=" border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Bill From</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="451" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                                    <table width="453" border="1" cellpadding="0" bordercolor='#B5B5B5'   style="   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        
+                                                        <tr >
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Vendor</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.company_name}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Name</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{v_contact[0].name}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Mobile No.</p>
+                                                            </th>
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                                <table width="353" border="0"  bordercolor='#DA251C' style="border-collapse: collapse;  box-sizing: border-box;">
+                                                                    <tr>
+                                                                        <td  style="font-size:12px; "><p style="padding: 10px">{{v_contact[0].phone1}}</p></td>
+                                                                        <td width="50"  style="font-size: 12px; background: #DCDCDC; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #B5B5B5;"><p style="padding: 10px">GST</p></td>
+                                                                        <td width="100" style="font-size:12px;"><p style="padding: 10px">{{orderdetail.gst_no}}</p></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> Address</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="352" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.addrress}} {{orderdetail.state}} {{orderdetail.district}} {{orderdetail.city}} - {{orderdetail.pincode}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <td style="width: 1024px; height: 10px; background: #da251c;">   
+                        </td>
+                    </tr> 
+                    <!-- <tr>
+                        <td width="944" style="padding: 0px 20px;">
+                            <table width="944" style="vertical-align: top;   table-layout: fixed;border-collapse: collapse;">
+                                <tr>
+                                    <td width="450"  style="vertical-align: top;  padding: 11px 0px; border: 0px; box-sizing: border-box;">
+                                        
+                                        <table width="450" border="1"  style="border-color: #da251c; table-layout: fixed;border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td width="450" style="padding: 0px;">
+                                                    <table style="table-layout: fixed;border-collapse: collapse;">
+                                                        <tr>
+                                                            <td width="450" style="background: #FBE8E7; padding: 10px; font-weight: bold; font-size: 14px;">
+                                                                Purchase Information
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td  style="vertical-align: top; padding:8px; border-right: 0; border-top: 0px;">
+                                                    <table  cellpadding="0" border="1"  style=" border-color: #727272;  border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        
+                                                        <tr >
+                                                            <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Order No.</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.invoice_id}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Date</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.date_created | date: 'dd MMM yyyy'}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="200px"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Status</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.receive_status}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">HSN Code</p>
+                                                            </th>
+                                                            
+                                                            <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;"> {{orderdetail.hsn_code}}</p>
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                        
+                                                        
+                                                        <tr>
+                                                            <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Material Type</p>
+                                                            </th>
+                                                            
+                                                            <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;"> {{orderdetail.material_type}}</p>
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                
+                                            </tr>
+                                        </table> 
+                                    </td>
+                                    
+                                </tr>
+                            </table>
+                        </td>
+                    </tr> -->
+                    
+                    <tr>
+                        <td style="padding: 0px 20px; " width="984">
+                            <table width="944" style="table-layout: fixed; border-collapse: collapse; ">
+                                <tr>
+                                    <td width="944"  style="vertical-align: top;">
+                                        
+                                        <table width="944" border="1" style="border-color: #727272; table-layout: fixed; border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td colspan="2" style="background: #000000; color: #fff; border: solid 1px #000000; padding: 10px; font-weight: bold; font-size: 14px;">Part Information</td>
+                                            </tr>
+                                            
+                                            
+                                            
+                                            <tr>
+                                                <td width="944px;" colspan="2"  style="box-sizing: border-box; vertical-align: top; border: solid 1px #000000; padding: 8px;  ">
+                                                    <table width="924"  cellpadding="0" border="1"   style="border-color: #727272;   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        <tr>
+                                                            <th width="30px;"  style="  text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >S.No.</th>
+                                                            <th width="120px;"  style=" text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;"  >Equipment Id</th>
+                                                            <th width="100px;" style=" text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Size</th>
+                                                            <th  style=" text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Description</th>
+                                                            <th width="100px;" style=" background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Purchase Price</th>
+                                                            <th width="100px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Order Qty</th>
+                                                            <th width="100px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Amount</th>
+                                                        </tr>
+                                                        
+                                                        <tr *ngFor="let f of itemdetail; let r = index">
+                                                            <td width="30px;"  style="  text-align: left;  padding: 8px; font-size: 12px; " >{{ r + 1 }}</td>
+                                                            <td width="120px;" style=" text-align: left;  padding: 8px; font-size: 12px;">{{f.part_number}}</td>
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px;" >{{f.dimensions}}</td>
+                                                            <td  style=" text-align: left;  padding: 8px; font-size: 12px;" >{{f.description}}</td>
+                                                            <td width="100px;" style=" text-align: right; padding: 8px; font-size: 12px;" >&#8377; {{f.rate}}</td>
+                                                            <td width="100px;" style=" text-align: center;  padding: 8px; font-size: 12px;" >{{f.qty}}</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >&#8377; {{f.item_total}}</td>
+                                                        </tr>
+                                                        
+                                                        
+                                                        <!-- <tr>
+                                                            <td width="50px;" colspan="5" rowspan="6"  style="  text-align: left;  padding: 8px; font-size: 12px; " >&nbsp;</td>
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Total</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{orderdetail.amount}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Total qty</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{qty}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr *ngIf="orderdetail.igst">
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >IGST ({{orderdetail.gst }}%)</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{orderdetail.igst}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="orderdetail.cgst">
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >CGST ({{orderdetail.gst / 2 }}%)</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{orderdetail.cgst}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="orderdetail.sgst">
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >SGST ({{orderdetail.gst / 2 }}%)</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{orderdetail.sgst}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td width="150px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Net Total </td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >&#8377; {{orderdetail.order_total}}</td>
+                                                        </tr> -->
+                                                        
+                                                        <!-- <tr>
+                                                            <td width="100px;" colspan="7
+                                                            " style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Rs. (Words) - {{ orderdetail.order_total | converToWord | titlecase}} /-  Only </td>
+                                                        </tr> -->
+                                                        
+                                                    </table>
+                                                    
+                                                    
+                                                    <table  width="924" style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; ">
+                                                        <tr style=" border-left: solid 1px #000000;">
+                                                            <td width="215" style=" text-align: left;  padding: 8px; font-size: 12px; "  >
+                                                            </td>
+                                                            
+                                                            <td  style=" text-align: left;   font-size: 12px;" >
+                                                                <table style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; ">
+                                                                    <tr>
+                                                                        <th style="text-align: left;  border-right: solid 1px  #000000;  line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                        <th style="text-align: left; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                    </tr>
+                                                                </table >    
+                                                            </td>
+                                                            
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 14px; border-left: solid 1px #000000;; border-bottom: solid 1px #000000;; font-weight: bold;" >Total</td>
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 12px; border-left: solid 1px #000000;; border-bottom: solid 1px #000000;; border-right: solid 1px #000000;" >{{orderdetail.amount}}</td>
+                                                        </tr>
+                                                        <tr style=" border-left: solid 1px #000000;">
+                                                            <td width="215" style=" text-align: left;  padding: 8px; font-size: 12px; "  >
+                                                            </td>
+                                                            
+                                                            <td  style=" text-align: left;   font-size: 12px;" >
+                                                                <table style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; ">
+                                                                    <tr>
+                                                                        <th style="text-align: left;  border-right: solid 1px  #000000;  line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                        <th style="text-align: left; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                    </tr>
+                                                                </table >    
+                                                            </td>
+                                                            
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 14px; border-left: solid 1px #000000;; border-bottom: solid 1px #000000;; font-weight: bold;" >Total qty</td>
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 12px; border-left: solid 1px #000000;; border-bottom: solid 1px #000000;; border-right: solid 1px #000000;" >{{qty}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="orderdetail.igst"  style=" border-left: solid 1px #000000;">
+                                                            <td width="215" style=" text-align: left;  padding: 8px; font-size: 12px; "  >
+                                                            </td>
+                                                            
+                                                            <td  style=" text-align: left;   font-size: 12px;" >
+                                                                <table style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; ">
+                                                                    <tr>
+                                                                        <th style="text-align: left;  border-right: solid 1px #000000;  line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                        <th style="text-align: left; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                    </tr>
+                                                                </table >    
+                                                            </td>
+                                                            
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 14px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; font-weight: bold;" >IGST ({{orderdetail.gst }}%)</td>
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 12px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; border-right: solid 1px #000000" >{{orderdetail.igst}}</td>
+                                                        </tr>
+                                                        <tr  *ngIf="orderdetail.cgst" style=" border-left: solid 1px #000000;">
+                                                            <td width="215" style=" text-align: left;  padding: 8px; font-size: 12px; "  >
+                                                            </td>
+                                                            
+                                                            <td  style=" text-align: left;   font-size: 12px;" >
+                                                                <table style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; ">
+                                                                    <tr>
+                                                                        <th style="text-align: left;  border-right: solid 1px  #000000;  line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                        <th style="text-align: left; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                    </tr>
+                                                                </table >    
+                                                            </td>
+                                                            
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 14px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; font-weight: bold;" >CGST ({{orderdetail.gst / 2 }}%)</td>
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 12px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; border-right: solid 1px #000000; ">{{orderdetail.cgst}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="orderdetail.sgst" style=" border-left: solid 1px#000000;">
+                                                            <td width="215" style=" text-align: left;  padding: 8px; font-size: 12px; "  >
+                                                            </td>
+                                                            
+                                                            <td  style=" text-align: left;   font-size: 12px;" >
+                                                                <table style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; ">
+                                                                    <tr>
+                                                                        <th style="text-align: left;  border-right: solid 1px  #000000;  line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                        <th style="text-align: left; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                    </tr>
+                                                                </table >    
+                                                            </td>
+                                                            
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 14px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; font-weight: bold;" >SGST ({{orderdetail.gst / 2 }}%)</td>
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 12px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; border-right: solid 1px #000000; ">{{orderdetail.sgst}}</td>
+                                                        </tr>
+                                                        <tr style=" border-left: solid 1px #000000;">
+                                                            <td width="215" style=" text-align: left;  padding: 8px; font-size: 12px; "  >
+                                                            </td>
+                                                            
+                                                            <td  style=" text-align: left;   font-size: 12px;" >
+                                                                <table style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; ">
+                                                                    <tr>
+                                                                        <th style="text-align: left;  border-right: solid 1px  #000000;  line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                        <th style="text-align: left; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;"></th>
+                                                                    </tr>
+                                                                </table >    
+                                                            </td>
+                                                            
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 14px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; font-weight: bold;" >Net Total</td>
+                                                            <td width="75;" style=" text-align: right;  padding: 8px; text-align: center; font-size: 12px; border-left: solid 1px #000000; border-bottom: solid 1px #000000; border-right: solid 1px #000000;" >&#8377; {{orderdetail.order_total}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr style="border: solid 1px #000000; width: 922px; display:inline-block;"><td>
+                                                            <p style="padding: 10px; font-size: 14px; font-weight: bold;">Rs. (Words) - {{ orderdetail.order_total | converToWord | titlecase}} Only</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <!-- <tr>
+                                                        <td 
+                                                        style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Rs. (Words) - {{ orderdetail.order_total | converToWord | titlecase}} /-  Only </td>
+                                                    </tr> -->
+                                                    
+                                                </table>
+                                            </td>
+                                            
+                                        </tr>
+                                    </table> 
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr> 
+                
+                <tr >
+                    <td style="padding: 0 20px; ">
+                        <table style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                            <td style="width: 462px;background: #FBE8E7; font-size: 12px; height: 54px; display:flex; align-items: center; justify-content: center; padding: 0 10px; line-height: 18px; border: solid 1px #DA251C; margin: 20px 0;">
+                                <p>Note : These Re-usable packaging Boxes are for reuse on Rentel Basis and not for Sale.</p>
+                                
+                            </td>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td style="padding: 0px 20px;">
+                        <table>
+                            <td>
+                                <p style="font-size:14px; font-weight:bold;">Terms and Conditions :</p>
+                                
+                                <ul style="margin: 0px; padding: 0px; list-style: none;">
+                                    <li>
+                                        <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px;">1. Please pay by Payee A/c Cheque/DD/NEFT/RTGS only</p>
+                                    </li>
+                                    <li>
+                                        <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px;">2. If payment is not made within 15 days interest @ 15% per annum will charged </p>
+                                    </li>
+                                    <li>
+                                        <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px; ">3. All Disputes will be settled at faridabad Jurisdiction </p>
+                                    </li>
+                                </ul>
+                            </td>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr> 
+                    <td style="height: 200px; padding: 0 20px; box-sizing: border-box; ">
+                        <table style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                            <td>
+                                <p style="font-size: 24px; font-weight: bold; text-align: right; width: 937px;">Mahalakshmi Logistics PVT. LTD.</p>
+                            </td>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td style="padding: 0 20px; width: 984px; padding-bottom: 25px;">
+                        <table width="938" style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                            <td>
+                                <ul style="margin: 0; padding: 0; list-style: none; display: inline-flex;">
+                                    <li style=" width: 258px; display: flex;  height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Prepared By</li>
+                                    <li style=" width: 258px; display: flex;  height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Checked By</li>
+                                    <li style=" width: 258px; display: flex;  height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Authorised Signatory</li>
+                                </ul>
+                            </td>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div> 
+        
+        <div id="print-section2" hidden >
+            <table width="1024px" style=" font-family:arial; border: solid 10px #DA251C; border-bottom: solid 1px #ccc; display:block;  margin: 0; margin: 0 auto; border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                <tr>
+                    <td  width="984" style=" background: #000; padding: 0px 20px; ">
+                        <h2 style=" width: 100%;  color:#fff;  display: flex; align-items: center; justify-content: center; text-transform: capitalize; "> Material Receipt Note </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table  width="944" style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                            <tr>
+                                <td style="display: flex;">
+                                    <div class="logo">
+                                        <img src="/assets/img/logo/logo.png" style="width: 100px;     margin: 15px 0px;">
+                                    </div>
+                                    <div class="company-name" style="padding-left: 33px;">
+                                        <h3 style="font-size:  47px; text-align: center; color: #da251c; font-weight:600; margin: 4px 0px; font-family: 'Berkshire Swash', cursive;">Mahalakshmi Logistics PVT. LTD.</h3>
+                                        <p style="margin: 0; font-size: 14px; color: #000; text-align: center;     font-weight: bold;">(An ISO 9001 : 2008 Certified Company)</p>
+                                        <p style="font-size: 12px; text-align: center; text-transform: capitalize;  line-height: 0px;  padding-bottom: 6px; ">Plot No 53/10 Industrial Area (Near Friends Auto) N.I.T. Faridabad (Haryana-121001) 
+                                        </p>
+                                        <p style="font-size: 12px; text-align: center; text-transform: capitalize; padding-bottom: 6px; line-height: 0px;">Corp Office : 53/03 , Head Office : Plot No. 53/10 , NIT , Faridabad</p>
+                                        <p style="font-size: 12px; text-align: center; text-transform: capitalize; padding-bottom: 6px; line-height: 0px;"><span style="font-weight: 600;">Phone:  </span>0129-422700-18 <span style="    font-weight: bold;
+                                            padding: 0px 2px;">GST NO</span>06AADCM8862E1ZD <span style="font-weight: bold;  padding: 0px 2px;"
+                                            >PAN NO</span> AADCM8862E</p>
+                                            <!-- <p style="font-size: 12px; text-align: center; text-transform: capitalize;  line-height: 0px;"><span style="font-weight: 600;">   E-mail: </span>fbd@mahalakshmilogistics.com<span style=" padding: 0px 2px; font-weight: bold;"> Website :</span>  www.mahalakshmilogistics.com </p> -->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                </tr>
+                
+                <tr>
+                    <td style="width: 1024px; height: 10px; background: #da251c;">  
+                         
+                    </td>
+                </tr> 
+                
+                <tr>
+                    <td width="944" style="padding: 0px 20px;">
+                        <table width="944" style="vertical-align: top;   table-layout: fixed;border-collapse: collapse;">
+                            <tr>
+                                <td width="450"  style="vertical-align: top;  padding: 11px 0px; border: 0px; box-sizing: border-box;">
+                                    
+                                    <table width="450" border="1"  style="border-color: #da251c; table-layout: fixed;border-collapse: collapse; margin: 9px 0;">
+                                        <tr>
+                                            <td width="450" style="padding: 0px;">
+                                                <table style="table-layout: fixed;border-collapse: collapse;">
+                                                    <tr>
+                                                        <td width="450" style="background: #FBE8E7; padding: 10px; font-weight: bold; font-size: 14px;">
+                                                            Purchase Information
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td  style="vertical-align: top; padding:8px; border-right: 0; border-top: 0px;">
+                                                <table  cellpadding="0" border="1"  style=" border-color: #727272;  border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                    
+                                                    <tr >
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Order No.</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{orderdetail.invoice_id}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr >
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Date</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{orderdetail.date_created | date: 'dd MMM yyyy'}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr >
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Status</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{orderdetail.receive_status}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">HSN Code</p>
+                                                        </th>
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;"> {{orderdetail.hsn_code}}</p>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                    
+                                                    
+                                                    <tr>
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Material Type</p>
+                                                        </th>
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;"> {{orderdetail.material_type}}</p>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            
+                                        </tr>
+                                    </table> 
+                                </td>
+                                
+                                <td width="470"  style="vertical-align: top;  padding: 11px 0px; border: 0px;">
+                                    
+                                    <table width="470" border="1"  style="border-color: #da251c; table-layout: fixed;border-collapse: collapse; margin: 9px 0;">
+                                        <tr>
+                                            <td width="470" style="padding: 0px;">
+                                                <table style="table-layout: fixed;border-collapse: collapse;">
+                                                    <tr>
+                                                        <td width="470" style="background: #FBE8E7; padding: 10px; font-weight: bold; font-size: 14px;">
+                                                            Receive Information
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td  style="vertical-align: top; padding:8px; border-right: 0; border-top: 0px;">
+                                                <table  cellpadding="0" border="1"  style=" border-color: #727272;  border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                    
+                                                    
+                                                    <tr >
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Receive No</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{receive.invoice_id}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr >
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Receive Date</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{receive.date_created | date: 'dd MMM yyyy'}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr >
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Invoice No</p>
+                                                        </th>
+                                                        
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{receive.invoice_no}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Invoice Date</p>
+                                                        </th>
+                                                        
+                                                        <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                            <p style="padding: 10px; margin: 0px;">{{receive.invoice_date | date: 'dd MMM yyyy'}} </p>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                    <tr>
+                                                        <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                            <p style="padding: 10px; margin: 0px;">Invoice Amount</p>
+                                                            </th>
+                                                            
+                                                            <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{receive.invoice_amt}} </p>
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                
+                                            </tr>
+                                        </table> 
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    
+                                    <!-- <td width="400" style="vertical-align: top">
+                                        
+                                        <table width="400" style=" border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Purchase Information</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="440" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                                    <table width="440" border="1" cellpadding="0" bordercolor='#B5B5B5'   style="   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        
+                                                        <tr >
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Order No.</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.invoice_id}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Date</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.date_created | date: 'dd MMM yyyy'}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Status</p>
+                                                            </th>
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                                <p style="padding: 10px; margin: 0px; ">{{orderdetail.receive_status}}</p>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr *ngIf="orderdetail.hsn_code">
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> HSN Code</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.hsn_code}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                        <tr *ngIf="orderdetail.material_type">
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> Material Type</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.material_type}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </td> -->
+                                    <td width="461" style="vertical-align: top">
+                                        
+                                        <table width="461" style=" border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Bill From</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="451" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                                    <table width="453" border="1" cellpadding="0" bordercolor='#B5B5B5'   style="   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        
+                                                        <tr >
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Vendor</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.company_name}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Name</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{v_contact[0].name}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Mobile No.</p>
+                                                            </th>
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                                <table width="353" border="0"  bordercolor='#DA251C' style="border-collapse: collapse;  box-sizing: border-box;">
+                                                                    <tr>
+                                                                        <td  style="font-size:12px; "><p style="padding: 10px">{{v_contact[0].phone1}}</p></td>
+                                                                        <td width="50"  style="font-size: 12px; background: #DCDCDC; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #B5B5B5;"><p style="padding: 10px">GST</p></td>
+                                                                        <td width="100" style="font-size:12px;"><p style="padding: 10px">{{orderdetail.gst_no}}</p></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> Address</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="352" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{orderdetail.addrress}} {{orderdetail.state}} {{orderdetail.district}} {{orderdetail.city}} - {{orderdetail.pincode}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr> 
+                    
+                    <tr>
+                        <td style="padding: 0px 20px; " width="984">
+                            <table width="944" style="table-layout: fixed; border-collapse: collapse; ">
+                                <tr>
+                                    <td width="944"  style="vertical-align: top;">
+                                        
+                                        <table width="944" border="1" style="border-color: #727272; table-layout: fixed; border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td colspan="2" style="background: #000000; color: #fff; border: solid 1px #000000; padding: 10px; font-weight: bold; font-size: 14px;">Part Information</td>
+                                            </tr>
+                                            
+                                            
+                                            
+                                            <tr>
+                                                <td width="944px;" colspan="2"  style="box-sizing: border-box; vertical-align: top; border: solid 1px #000000; padding: 8px;  ">
+                                                    <table width="924"  cellpadding="0" border="1"   style="border-color: #727272;   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        <tr>
+                                                            <th width="30px;"  style="  text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >S.No.</th>
+                                                            <th   width="120px;" style=" text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;"  >Equipment Id</th>
+                                                            <th width="100px;" style=" text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Size</th>
+                                                            <th style=" text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Description</th>
+                                                            <th width="100px;" style=" background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Purchase Price</th>
+                                                            <th width="100px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Accept Qty</th>
+                                                            <th width="100px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Reject Qty</th>
+                                                            <th width="100px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Amount</th>
+                                                        </tr>
+                                                        
+                                                        <tr *ngFor="let f of item;let i=index">
+                                                            <td width="30px;"  style="  text-align: left;  padding: 8px; font-size: 12px; " >{{ i + 1 }}</td>
+                                                            <td  width="120px;" style=" text-align: left;  padding: 8px; font-size: 12px;">{{f.part_number}}</td>
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px;" >{{f.dimensions}}</td>
+                                                            <td  style=" text-align: left;  padding: 8px; font-size: 12px;" >{{f.description}}</td>
+                                                            <td width="100px;" style=" text-align: right; padding: 8px; font-size: 12px;" >&#8377; {{f.rate}}</td>
+                                                            <td width="100px;" style=" text-align: center;  padding: 8px; font-size: 12px;" >{{f.accept_qty}}</td>
+                                                            <td width="100px;" style=" text-align: center;  padding: 8px; font-size: 12px;" > {{f.reject_qty}}</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >&#8377; {{f.amount}}</td>
+                                                        </tr>
+                                                        
+                                                        
+                                                        <tr>
+                                                            <td width="50px;" colspan="6" rowspan="6"  style="  text-align: left;  padding: 8px; font-size: 12px; " >&nbsp;</td>
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Total</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{receive.total_amount}}</td>
+                                                        </tr>
+                                                        
+                                                        
+                                                        
+                                                        <tr *ngIf="receive.igst ">
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >IGST ({{receive.gst }}%)</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{receive.igst}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="receive.cgst">
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >CGST ({{receive.gst / 2 }}%)</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{receive.cgst}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="receive.sgst">
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >SGST ({{receive.gst / 2 }}%)</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{receive.sgst}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr *ngIf="receive.shipping_charge">
+                                                            <td width="100px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Shipping Charge</td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >{{receive.shipping_charge}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td width="150px;" style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Net Total </td>
+                                                            <td width="100px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >&#8377; {{receive.net_amount}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td width="100px;" colspan="8
+                                                            " style=" text-align: left;  padding: 8px; font-size: 12px; font-weight: bold;" >Rs. (Words) - {{ receive.net_amount | converToWord | titlecase}} Only</td>
+                                                        </tr>
+                                                        
+                                                    </table>
+                                                </td>
+                                                
+                                            </tr>
+                                        </table> 
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr> 
+                    
+                    <tr >
+                        <td style="padding: 0 20px; ">
+                            <table style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                <td style="width: 462px;background: #FBE8E7; font-size: 12px; height: 54px; display:flex; align-items: center; justify-content: center; padding: 0 10px; line-height: 18px; border: solid 1px #DA251C; margin: 20px 0;">
+                                    <p><span style="font-size:14px; font-weight:bold;">Note :</span>
+                                        These Re-usable packaging Boxes are for reuse on Rentel Basis and not for Sale.</p>
+                                        
+                                    </td>
+                                    <td *ngIf="orderdetail.remark" style="width: 462px;background: #FBE8E7; font-size: 12px; height: 54px; display:flex; align-items: center; padding: 0 10px; line-height: 18px; border: solid 1px #DA251C; margin: 20px 0;">
+                                        <p><span style="font-size:14px; font-weight:bold;">Remark :</span>
+                                            {{orderdetail.remark}}</p>
+                                        </td>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td style="padding: 0px 20px;">
+                                    <table>
+                                        <td>
+                                            <p style="font-size:14px; font-weight:bold;">Terms and Conditions :</p>
+                                            
+                                            <ul style="margin: 0px; padding: 0px; list-style: none;">
+                                                <li>
+                                                    <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px;">1. Please pay by Payee A/c Cheque/DD/NEFT/RTGS only</p>
+                                                </li>
+                                                <li>
+                                                    <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px;">2. If payment is not made within 15 days interest @ 15% per annum will charged </p>
+                                                </li>
+                                                <li>
+                                                    <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px; ">3. All Disputes will be settled at faridabad Jurisdiction </p>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <tr> 
+                                <td style="height: 200px; padding: 0 20px; box-sizing: border-box; ">
+                                    <table style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                        <td>
+                                            <p style="font-size: 24px; font-weight: bold; text-align: right; width: 937px;">Mahalakshmi Logistics PVT. LTD.</p>
+                                        </td>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td style="padding: 0 20px; width: 984px; padding-bottom: 25px;">
+                                    <table width="938" style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                        <td>
+                                            <ul style="margin: 0; padding: 0; list-style: none; display: inline-flex;">
+                                                <li style=" width: 258px; display: flex;  height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Prepared By</li>
+                                                <li style=" width: 258px; display: flex;  height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Checked By</li>
+                                                <li style=" width: 258px; display: flex;  height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Authorised Signatory</li>
+                                            </ul>
+                                        </td>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div> 
+                    
+                    <div class="h100"></div>

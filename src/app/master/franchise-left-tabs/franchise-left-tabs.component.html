@@ -1,0 +1,23 @@
+<div class="master-tabs">
+    <ul>
+
+
+            <li><a mat-raised-button routerLink="/franchise-dashboard/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5].indexOf( db.datauser.access_level ) > -1 )">Dashboard</a></li>
+            <li><a mat-raised-button routerLink="/consigner-detail/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5,6].indexOf( db.datauser.access_level ) > -1 )">{{db.contact_name}}</a></li>
+            <li><a mat-raised-button routerLink="/franchise-stock/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5,6].indexOf( db.datauser.access_level ) > -1 )">Stock</a></li>
+            <li><a mat-raised-button routerLink="/franchise-leads/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5].indexOf( db.datauser.access_level ) > -1 )">Leads</a></li>
+            <li><a mat-raised-button routerLink="/franchise-leads-appointment/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5].indexOf( db.datauser.access_level ) > -1 )">Appointment</a></li>
+            <li><a mat-raised-button routerLink="/franchise-followup/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5].indexOf( db.datauser.access_level ) > -1 )">Followup</a></li>
+            <li><a mat-raised-button routerLink="/franchise-customers/{{franchise_id}}/2" routerLinkActive="active" *ngIf="(  [1,3,5].indexOf( db.datauser.access_level ) > -1 )">Consumers</a></li>
+            <li><a mat-raised-button routerLink="/franchise-orders/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5,6].indexOf( db.datauser.access_level ) > -1 )">Purchase Orders</a></li>
+            <li><a mat-raised-button routerLink="/franchise-invoice/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5,6].indexOf( db.datauser.access_level ) > -1 )">Purchase Invoices</a></li>
+            <li><a mat-raised-button routerLink="/franchise-payment/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5,6].indexOf( db.datauser.access_level ) > -1 )">Payments</a></li>		
+            <li><a mat-raised-button routerLink="/franchise-jobcard-list/{{franchise_id}}" *ngIf="(  [1,3,5].indexOf( db.datauser.access_level ) > -1 )" routerLinkActive="active">Jobcards</a></li>		
+            <li><a mat-raised-button routerLink="/franchise/customer_invoices/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5,6].indexOf( db.datauser.access_level ) > -1 )">Sale Invoices</a></li>
+            <li><a mat-raised-button routerLink="/franchise-service-list/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3,5,6].indexOf( db.datauser.access_level ) > -1 )">Service</a></li>
+            <li><a mat-raised-button routerLink="/franchise-consumption-stock/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,3].indexOf( db.datauser.access_level ) > -1 )">Consumption Stock</a></li>
+            		
+            <!-- <li><a mat-raised-button routerLink="/franchise-followup/{{franchise_id}}" routerLinkActive="active">Payments</a></li>	-->	
+  
+    </ul>
+</div>

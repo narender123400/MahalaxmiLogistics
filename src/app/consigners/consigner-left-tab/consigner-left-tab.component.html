@@ -1,0 +1,12 @@
+<div class="master-tabs">
+    <ul>
+            <li><a mat-raised-button routerLink="/consigner-detail/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5,8].indexOf( db.datauser.access_level ) > -1 )">Detail</a></li>
+            <li><a mat-raised-button routerLink="/consigner-stock/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5,8].indexOf( db.datauser.access_level ) > -1 )">Stock</a></li>
+            <li *ngIf="SaleOrderConsignee"><a mat-raised-button routerLink="/consigner-consignee/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5,8].indexOf( db.datauser.access_level ) > -1 )">Consignee</a></li>
+            <li *ngIf="aggre_name"><a mat-raised-button routerLink="/consigner-sales-order/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5,8].indexOf( db.datauser.access_level ) > -1 )">Agreement</a></li>
+            <li *ngIf="saleChallan_name"><a mat-raised-button routerLink="/consigner-aggrement-challan/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5,8].indexOf( db.datauser.access_level ) > -1 )">Challan</a></li>
+            <li *ngIf="invoice_name"><a mat-raised-button routerLink="/consigner-challan/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5,8].indexOf( db.datauser.access_level ) > -1 )">Invoice</a></li>
+            <li ><a mat-raised-button routerLink="/in-transit-list/{{franchise_id}}" routerLinkActive="active" *ngIf="(  [1,5,8].indexOf( db.datauser.access_level ) > -1 )">In Transit</a></li>
+  
+    </ul>
+  </div>

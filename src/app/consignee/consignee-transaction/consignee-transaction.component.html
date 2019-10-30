@@ -1,0 +1,223 @@
+<div class="main-container">
+    <div class="master-heading">
+        <div class="heading">
+            <h1>MASTER's</h1>
+        </div>
+    </div>
+    <div class="cs-container">
+        <div class="cs-row cs-tabs-space">
+            <!-- TABS Component -->
+            <!-- <app-stock-tab></app-stock-tab> -->
+            <app-consignee-left-tab></app-consignee-left-tab>
+
+     
+            <!-- TABS Component -->
+            <div class="right-data tabs-listing">
+                <div class="cs-spinner full-page" *ngIf = "loading_list">
+                    <div class="outer">
+                        <div class="innear">
+                            <mat-spinner></mat-spinner>
+                            <P>LOADING . . .</P>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="contst">
+                            <div class="cs-heading">
+                                <h2>Product DETAIL</h2>
+                            </div>
+                            
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="side-by-side mt15 mb15" style="display: inherit;">
+                                        <div class="row mr0">
+                                            <div class="figure new-figure">
+                                                <p>Part Number</p>
+                                                <p>{{product.part_number}}</p>
+                                            </div>
+                                            <div class="figure new-figure">
+                                                <p>Size</p>
+                                                <p>{{product.dimensions}}</p>
+                                            </div>
+                                            <div class="figure new-figure">
+                                                <p>weight</p>
+                                                <p>{{product.weight}}</p>
+                                            </div>
+                                            <div class="figure new-figure">
+                                                <p>Volume Weight</p>
+                                                <p>{{ product.volume_weight }}</p>
+                                            </div>
+                                            <div class="figure new-figure">
+                                                <p>Description </p>
+                                                <p>{{ product.description }}</p>
+                                            </div>
+                                            
+                                            <div class="figure new-figure">
+                                                <p>Fresh Stock</p>
+                                                <p>{{ product.fresh_stock }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- <app-finish-tab></app-finish-tab> -->
+                            <div class="row">
+                                <div class="cs-table-tabs clr-tab tabs-bg mt0 sticky-tabs">
+                                    <ul>
+                                        <li (click)="mode='1';getProductDetail() ">
+                                            <a [ngClass]="{'active': mode == '1'  }" >
+                                                <p>Incoming</p>
+                                                <!-- <span class="counter yellow-bg">{{purchase_pending_count}}</span> -->
+                                            </a>
+                                        </li>
+                                        <li (click)="mode='2';getbranchtransferstock()">
+                                            <a [ngClass]="{'active': mode == '2'  }">
+                                                <p>Outgoing</p>
+                                                 <!-- <span class="counter green-bg">{{purchase_receive_count}}</span>  -->
+                                            </a>
+                                        </li>
+                                        <!-- <li (click)="mode='4';getbranchsConsDetail() ">
+                                            <a [ngClass]="{'active': mode == '4'  }">
+                                                <p>Consignee Stock</p>
+                                                 <span class="counter white-bg">{{purchase_all_count}}</span> 
+                                            </a>
+                                        </li> -->
+                                    </ul>
+                                </div>
+
+                                <div class="cs-table left-right-15" *ngIf="mode == '2' ">
+                                    <div class="header sticky-head">
+                                        <table class="sno-border">
+                                            <tr >
+                                                <th class="w40">&nbsp;</th>
+                                                <th class="w110">Date</th>
+                                                <th class="w110">Create By</th>
+                                                <th class="w120">Consignor Name</th>
+                                                <th class="w120">Branch Name</th>
+                                                <th class="w110">Qty</th>
+                                              
+                                                
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="table-container">
+                                        <div class="table-body">
+                                            <table>
+                                                <tr *ngFor="let p of incoming; let i = index">
+                                                    <td class="w40">{{ (i + 1) }}</td>
+                                                    <td class="w110">{{p.date_created   | date: 'dd MMM yyyy'}}</td>
+                                                    <td class="w110">{{p.created_name}}</td>
+                                                    <td class="w120"><a mat-button class="link" routerLink="/consigner-detail/{{p.consigner_id}}" routerLinkActive="active">{{p.consignor_name}}</a></td>
+                                                    <td class="w120"><a mat-button class="link" routerLink="/branch-detail/{{p.branch_id}}" routerLinkActive="active">{{p.branch_name}}</a></td>
+                                                    <td class="w110">{{p.picked_stock}}</td>
+                                                   
+                                                    
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div> 
+                                
+                                <div class="cs-table left-right-15 mt15" *ngIf="mode == '1' ">
+                                    <div class="header sticky-head">
+                                        <table class="sno-border">
+                                            <tr >
+                                                <th class="w40">&nbsp;</th>
+                                                <th class="w110">Date</th>
+                                                <th class="w110">Created By</th>
+                                                <th class="w100">In Transit No.</th>
+                                                <th class="w120">Consignor Name</th>
+                                                <th class="w120">Branch Name</th>
+                                                <th class="w100">Intransit Qty</th>
+                                                <th class="w100 text-center">Recived Qty</th>
+                                                <th class="w120">Intransit Status</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="table-container">
+                                        <div class="table-body">
+                                            <table>
+                                                    <tr *ngFor="let p of incoming; let i = index">
+                                                            <td class="w40">{{ (i + 1) }}</td>
+                                                            <td class="w110">{{p.date_created   | date: 'dd MMM yyyy'}}</td>
+                                                            <td class="w110">{{p.created_name}}</td>
+                                                            <td class="w100"> 
+                                                                 <a mat-button class="link" routerLink="/in-transit-detail/{{p.consigner_intransit_id}}" routerLinkActive="active">#TRNSIT-{{p.consigner_intransit_id}}</a>
+                                                            </td>
+                                                            <td class="w120"><a mat-button class="link" routerLink="/consigner-detail/{{p.consigner_id}}" routerLinkActive="active">{{p.name}}</a></td>
+                                                            <td class="w120"><a mat-button class="link" routerLink="/branch-detail/{{p.branch_id}}" routerLinkActive="active">{{p.branch_name}}</a></td>
+                                                            <td class="w100">{{p.intransit_qty}}</td>
+                                                            <td class="w100 text-center">{{p.delivered_qty}}</td>
+                                                            <td class="w120">{{p.intransit_status}}</td>
+                                                               
+                                                        </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- <div class="cs-table left-right-15 mt15">
+                                    <div class="header sticky-head">
+                                        <table>
+                                            <tr>
+                                                <th class="w30">&nbsp;</th>
+                                                <th>Branch Name</th>
+                                                <th class="w120">Stock</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="table-container">
+                                        <div class="table-body">
+                                            <table>
+                                                <tr>
+                                                    <td class="w30">1</td>
+                                                    <td >Branch 1</td>
+                                                    <td class="w120">20</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td >Branch 2</td>
+                                                    <td>50</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>  -->
+
+                                
+                                <div class="cs-table left-right-15" *ngIf="mode == '4' ">
+                                        <div class="header sticky-head">
+                                            <table>
+                                                <tr >
+                                                    <th class="w30">&nbsp;</th>
+                                                    <th class="w180">Consignee</th>
+                                                    <th class="w100">Stock</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="table-container">
+                                            <div class="table-body">
+                                                <table>
+                                                    <tr *ngFor="let branch of stock; let i = index" >
+                                                        <td class="w30">{{ i + 1 }}</td>
+                                                        <td class="w180">{{branch.consignee_name}}</td>                                                       
+                                                        <td class="w100">{{branch.stock}}</td>
+                                                        </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div> 
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="h100"></div>

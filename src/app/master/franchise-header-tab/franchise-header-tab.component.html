@@ -1,0 +1,16 @@
+<div class="navigations">
+    <ul>
+        
+
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )"><a routerLink="/branch-detail/{{franchise_id}}" routerLinkActive="active" >Detail</a></li>
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )"><a routerLink="/branch-stock/{{franchise_id}}" routerLinkActive="active" >Stock</a></li>
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )"><a routerLink="/branch-consigner/{{franchise_id}}" routerLinkActive="active" >Consigner</a></li>
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )"><a routerLink="/branch-consignee/{{franchise_id}}" routerLinkActive="active" >Consignee</a></li>
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )"><a routerLink="/branch-sales-order/{{franchise_id}}" routerLinkActive="active" >Agreement</a></li>
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )"><a routerLink="/branch-challan/{{franchise_id}}" routerLinkActive="active" >Invoice</a></li>
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )"><a routerLink="/branch-pickup/{{franchise_id}}" routerLinkActive="active" >Pick Up</a></li>
+        <li *ngIf="(  [5].indexOf( db.datauser.access_level ) > -1 )" ><a routerLink="/users-list" routerLinkActive="active" >Master's</a></li>
+
+
+    </ul>
+</div>

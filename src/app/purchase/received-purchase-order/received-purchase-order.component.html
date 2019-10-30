@@ -1,0 +1,228 @@
+<div class="main-container">
+  <div class="cs-spinner full-page" *ngIf = "!loading_list">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner></mat-spinner>
+        <P>LOADING . . .</P>
+      </div>
+    </div>
+  </div>
+  <div class="master-heading bcspace">
+    <div class="back-btn">
+      <a  routerLink="/purchases/{{orderdetail.id}}/details" routerLinkActive="active" mat-menu-item>
+        <i class="material-icons">arrow_right_alt</i></a>
+      </div>
+      <div class="heading">
+        <h1>RECEIVE PURCHASE ORDER</h1>
+      </div>
+    </div>
+    <div class="cs-container detail">
+      <form name="form"  #d="ngForm" (ngSubmit)="d.form.valid ? add_receive_order_detail() : '' "  novalidate>
+        <div class="row">
+          <div class="col-12">
+            <div class="right-data pl0">
+              <div class="contst">
+                <div class="cs-heading">
+                  <h2>Receive Detail</h2>
+                  <p><i class="material-icons ic-watch">watch_later</i>{{orderdetail.date_created  | date: 'dd MMM yyyy'}}</p>
+                </div>
+                <div class="cs-divider pt10">
+                  <mat-divider></mat-divider>
+                </div>  
+                
+                <div class="form-field">
+                  <div class="row">
+                    <div class="col-3">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input cs-date-picker">
+                          <input placeholder="DATE" [(ngModel)]="purchase_form.invoice_date" name="invoice_date" required matInput [matDatepicker]="picker" required>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="control-field col-12 ">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" [(ngModel)]="purchase_form.invoice_no" name="invoice_no" required matInput placeholder="Invoice No " required>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="control-field col-12 ">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" (keypress)="numeric_Number($event)" [(ngModel)]="purchase_form.invoice_amt" name="invoice_amt" required matInput placeholder="Invoice Amount" required>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <div class="control-field col-12 ">
+                        <div class="cs-file mt10">
+                          <label>
+                            
+                              <form name="couponForm" #f="ngForm" novalidate autocomplete="off">
+                      
+                                  <input type="file" name="attachment" #coupon_data="ngModel" [(ngModel)]="attachment"  (change)="onUploadChange1($event,f)" accept=".png,.jpg,.jpeg,.pdf" >
+                                </form>
+                            <!-- <input type="file" required (change)="  ($event)"  placeholder="Upload Copy of Invoice" name="invoice_doc" accept=".png,.jpg,.jpeg" > -->
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-4">
+                      <div class="control-field col-12 ">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input name="receive_note" [(ngModel)]="purchase_form.receive_note" cols="30" rows="10"  matInput placeholder="Receive Note " >
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+                    <div class="control-field col-3">
+                      <mat-form-field class="example-full-width cs-input">
+                        <textarea matInput placeholder="Receive Note " name="receive_note" [(ngModel)]="purchase_form.receive_note" class="h100" ></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>              
+                  <div class="cs-divider pt20 left-right-15">
+                    <mat-divider></mat-divider>
+                  </div>
+                </div>
+              </div>
+            </div>        
+          </div>     
+        </div>   
+        <div class="row">
+          <div class="col-12">
+            <div class="cs-heading mt20 mb10">
+              <h2>RECEIVE ITEM DETAILS</h2>
+            </div>
+            
+            <div class="cs-table left-right-15">
+              <div class="header">
+                <table class="sno-border">
+                  <tr>
+                    <th class="w30 border-right-none"></th>
+                    <th class="w140">Equipment Id</th>
+                    <th class="w140">Size</th>
+                    <th >description</th>
+                    <th class="w90">Total Order Qty</th>
+                    <th class="w90">Pending Qty</th>
+                    <!-- <th class="w130">Received QTY</th> -->
+                    <th class="w90">Accepted Qty</th>
+                    <th class="w90">Rejected Qty</th>
+                    <th class="w100">Purchase Price</th>
+                    <th class="w130">Accept Qty</th>
+                    <th class="w130">Reject Qty</th>
+                    <th class="w130">Amount</th>
+                  </tr>
+                </table>
+              </div>
+              <div class="table-container">
+                <div class="table-body">
+                  <table class="sno-border">
+                    <tr *ngFor="let items of itemdetail; let s = index">
+                      <td class="w30 text-center">{{s+1}}</td>
+                      <td class="w140">{{ items.part_number }}</td>
+                      <td class="w140">{{ items.dimensions }}</td>
+                      <td >{{ items.description }}</td>
+                      <td class="w90">{{items.qty}}</td>
+                      <td class="w90">{{items.pending_qty}}</td>
+                      <td class="w90">{{items.accepted_qty}}</td>
+                      <td class="w90">{{items.rejected_qty}}</td>
+                      <td class="w100">&#8377; {{items.rate}}</td>
+                      <td class="w130 center-align" >
+                        <div class="edit-td-input" *ngIf = "items.qty>items.receive_qty">
+                          <input  type="number" [(ngModel)]="items.accept_qty" (keyup)="val_accept(s)" [name]="'accept_qty'+s" (keypress)="numeric_Number($event)" max="{{items.pending_qty}}" min="1" required style="background: #f5f5f5;">
+                        </div>
+                      </td>
+                      <td class="w130 center-align" >
+                        <div class="edit-td-input" *ngIf = "items.qty>items.receive_qty">
+                          <input  type="number" [(ngModel)]="items.reject_qty"  (keyup)="val_reject(s)"   [name]="'reject_qty'+s" (keypress)="numeric_Number($event)" max="{{items.pending_qty}}" min="1"  style="background: #f5f5f5;">
+                        </div>
+                      </td>
+                      <td class="w130">&#8377; {{items.amount}}</td>
+                    </tr>                
+                  </table>
+                </div>
+              </div>
+            </div>     
+          </div>
+        </div>
+
+        <div class="edit-td-input active" >
+            <textarea  placeholder="Remark" name ="remark"  [(ngModel)]="purchase_form.remark"  #remark="ngModel"></textarea>
+        </div>
+
+        <div class="row" *ngIf="purchase_form.total_qty > 0">
+          <div class="col-8 empty"></div>
+          <div class="col-4">
+            <div class="invoice-details" style="padding: 15px 30px 15px 15px;">
+              <table class="invoice-table">                           
+                  <tr>
+                    <td class="w200 td">Total Qty	</td>
+                    <td class="td">{{purchase_form.total_qty}}</td>
+                  </tr>
+                
+                  <tr>
+                    <td class="w200 td">Total Amount	</td>
+                    <td class="td">&#8377; {{purchase_form.total_amount}}</td>
+                  </tr>
+  
+                  <tr>
+
+                      <td class="w200 td">GST	</td>
+                      <td class="td">
+                         <div class="edit-td-input active">
+                        <input  placeholder="GST %" name="gst"  [(ngModel)]="purchase_form.gst_per"  name="gst_per"  (input)="cal()" class="wp30 pr0">
+                      </div>
+                    </td>
+    
+                  </tr> 
+                  <tr *ngIf="purchase_form.igst_amount">
+                    <td class="w200 td">IGST	</td>
+                    <td class="td">&#8377; {{purchase_form.igst_amount}}</td>
+                  </tr>
+                  
+                  <tr *ngIf="purchase_form.cgst_amount">
+                    <td class="w200 td">CGST	</td>
+                    <td class="td">&#8377; {{purchase_form.cgst_amount}}</td>
+                  </tr>
+                  <tr *ngIf="purchase_form.sgst_amount">
+                    <td class="w200 td">SGST	</td>
+                    <td class="td">&#8377; {{purchase_form.sgst_amount}}</td>
+                  </tr>
+
+                  <!-- <tr>
+
+                      <td class="w200 td">Shipping charge	</td>
+                      <td class="td">
+                         <div class="edit-td-input active">
+                        <input  placeholder="Shipping Charge" name="shipping_charge"  [(ngModel)]="purchase_form.shipping_charge"  name="shipping_charge"  (input)="cal()" class="wp30 pr0">
+                      </div>
+                    </td>
+        
+                  </tr>  -->
+  
+                  <tr>
+                    <td class="w200 td">Net Amount	</td>
+                    <td class="td">&#8377; {{purchase_form.net_amount}}</td>
+                  </tr>
+  
+              </table>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-12">
+            <div class="cs-btn mt32 text-right"  [ngClass]="{loading: !loading_list}">
+              <div class="in-btn">
+                <button type="submit" class="cs-btn green-btn waves-effect default right mrr30 radius0" mat-raised-button color="primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="h100"></div>

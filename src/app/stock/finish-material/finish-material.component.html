@@ -1,0 +1,106 @@
+<div class="main-container">
+    <div class="master-heading bcspace">
+        <div class="back-btn">
+            <a mat-button (click)="db.goBack()" ><i class="material-icons">arrow_right_alt</i></a>
+        </div>
+        <div class="top-search wp30 ml30">
+            <input type="text" placeholder="SEARCH. . ." [(ngModel)]="search"  (keyup.enter)="getProductList()">
+            <i class="material-icons">search</i>
+        </div>
+        
+        <div class="top-pagination m-right-data">
+                <div class="cs-btn  mr20 ">
+                        <div class="in-btn">
+                          <a class="h30-btn" mat-raised-button routerLink="/manage-stock-add" routerLinkActive="active" color="warn">Manage</a>
+                        </div>
+                      </div>
+            <ul>
+                <li><p>Pages {{ current_page }} of {{ last_page }}</p></li>
+                <li><button mat-button class="left-btn" (click) = 'redirect_previous()'><i class="material-icons">keyboard_arrow_left</i></button></li>
+                <li><input type="text" placeholder="GO TO" [(ngModel)]="current_page"  (keyup.enter)="getProductList()"></li>
+                <li><button mat-button class="right-btn" (click) = 'redirect_next()'><i class="material-icons">keyboard_arrow_right</i></button></li>
+            </ul>
+        </div>
+        </div>
+        <div class="cs-container">
+            <div class="cs-row cs-tabs-space">
+                <app-stock-tab></app-stock-tab>
+                <div class="right-data tabs-listing">
+                    <div class="cs-spinner full-page" *ngIf = "loading_list">
+                        <div class="outer">
+                            <div class="innear">
+                                <mat-spinner></mat-spinner>
+                                <P>LOADING . . .</P>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="cs-table mt15" *ngIf="products.length > 0">
+                        <div class="header sticky-header">
+                            <table>
+                                <tr>
+                                    <th class="w35">&nbsp;</th>
+                                    <th class="w120">Category</th>
+                                    <th class="w130">Equipment Id</th>
+                                    <th class="w120">Alias</th>
+                                    <th>Description</th>
+                                    <th class="w60">Stock Alert</th>
+                                    <th class="w73">Current Stock</th>
+                                    <th class="w70">Intransit Stock</th>
+                                    <th class="w70 text-center">Branch Stock</th>
+                                    <th class="w70 text-center">Customer Stock</th>
+                                    <th class="text-center w110">Action</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-body">
+                                <table>
+                                    <tr *ngFor="let product of products; let i = index">
+                                        <td class="w35">{{ i + 1  }}</td>
+                                        <td class="w120">{{ product.category }}</td>
+                                        <td class="w130">{{ product.part_number }}</td>
+                                        <td  class="w120">{{ product.alias }}</td>
+                                        <td >{{ product.description }}</td>
+                                        <td class="w60">{{ product.stock_alert }}</td>
+                                        <td class="text-center w73" >
+                                            <div class="edit-td-input" [ngClass]="{'active' : product.updated_at == '' }">
+                                                <i class="material-icons td-icon edit-icon" (click)="product.updated_at = '' " *ngIf="product.updated_at">create</i>
+                                                <input  placeholder="Qty." [(ngModel)]="product.fresh_stock" (keyup.enter)="update_stock()" type="number" [name]="'update_qty'+i+v" #update_qty="ngModel" required [readonly]="product.updated_at">
+                                                <i class="material-icons td-icon save-icon" (click)="update_stock()"  *ngIf="product.updated_at == ''">save</i>
+                                            </div>
+                                        </td>
+                                        <td class="w70 text-center">
+                                        <a mat-button class="link" (click)="openDialog(product.id,3)">{{ product.intransit_stock }}</a>
+                                       </td>
+                                        <td class="w70 text-center">
+                                            <a mat-button class="link" (click)="openDialog(product.id,1)">{{ product.branch_stock }}</a> 
+                                        </td>
+                                        <td class="w70 text-center">
+                                            <a mat-button class="link" (click)="openDialog(product.id,2)">{{ product.consigner_stock }}</a>
+                                        </td>
+                                        <td class="text-center w110">
+                                            <a mat-button  class="link"   (click)="product.updated_at = '1'; add(0) " *ngIf="product.updated_at == '' ">Cancel</a>
+                                            <a mat-button  routerLink="/finish-material-detail/{{product.id}}" routerLinkActive="active"  class="link">Transaction</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+
+        <div class="excel-btn"  (click)="exportStock()" >
+                <div class="image-area" >
+                    <a>
+                        <img src="assets/img/excel.svg">
+                    </a>
+                </div>
+            </div>
+
+    </div>
+    
+    <div class="h100"></div>

@@ -1,0 +1,115 @@
+<div class="main-container">
+  <div class="master-heading">
+    <div class="heading">
+      <h1>MASTER's</h1>
+    </div>
+  </div>
+  <div class="cs-container">
+    <div class="cs-row cs-tabs-space">
+      <app-master-add-tabs></app-master-add-tabs>
+      <div class="right-data">
+        <form name="form" (ngSubmit)="f.form.valid && updateProduct()" #f="ngForm" novalidate>
+          <div class="contst">
+            <div class="cs-heading">
+              <h2>Update Part</h2>
+            </div>
+            
+            <div class="form-field">
+              <div class="row">
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="cs-multi-select">
+                    <mat-select placeholder="Category" [(ngModel)] = "form.category" #category="ngModel" name="category" required>
+                      <mat-option value = "PP Foldable Box" >PP Foldable Box</mat-option>
+                      <mat-option value = "PPIN" >PPIN</mat-option>
+                      <mat-option value = "PP BOX" >PP BOX</mat-option>
+                      <mat-option value = "FLC-128" >FLC-128</mat-option>
+                    </mat-select>
+                  </mat-form-field>  
+                </div>
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #item_name name="part_number" placeholder="Equipment Id" [(ngModel)]="form.part_number" required>
+                  </mat-form-field>
+                </div>
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #dimensions name="dimensions" placeholder="Size" [(ngModel)]="form.dimensions" required>
+                  </mat-form-field>
+                </div>
+                
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #weight name="weight" placeholder="Weight (KG)" [(ngModel)]="form.weight" max="50" min="0" value="0" step="0.01">
+                  </mat-form-field>
+                </div>
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #alias name="alias" placeholder="Alias" [(ngModel)]="form.alias" >
+                  </mat-form-field>
+                </div>
+                
+                
+                
+                
+                
+              </div>
+              <div class="row">
+                
+                
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #volume_weight name="Volume Weight" placeholder="Volume Weight" [(ngModel)]="form.volume_weight" max="50" min="0" value="0" step="0.01">
+                  </mat-form-field>
+                </div>
+                
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #purchase_price name="purchase_price" placeholder="Purchase Price" [(ngModel)]="form.purchase_price" max="50" min="0" value="0" step="0.01" required>
+                  </mat-form-field>
+                </div>
+                
+                
+                <!-- <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #rental_price name="rental_price" placeholder="Rental Price" [(ngModel)]="form.rental_price" max="50" min="0" value="0" step="0.01" required>
+                  </mat-form-field>
+                </div> -->
+                
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput type="text" #stock_alert name="stock_alert" placeholder="Stock Alert" [(ngModel)]="form.stock_alert" max="50" min="0" value="0" step="0.01">
+                  </mat-form-field>
+                </div>
+                
+                
+                
+                <div class="control-field col-5">
+                  <mat-form-field class="example-full-width cs-input">
+                    <textarea matInput placeholder="Description" class="h100" name="description" [(ngModel)] = "form.description" #description="ngModel"></textarea>
+                  </mat-form-field>
+                </div>
+                
+              </div>
+              
+            </div>
+          </div>
+          <div class="cs-btn fixedd mt32 text-right" [ngClass]="{loading: sendingData}">
+            <div class="in-btn">
+              <button mat-raised-button color="primary">Update</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="h100"></div>

@@ -1,0 +1,574 @@
+<div class="main-container">
+  <div class="master-heading">
+    <div class="heading">
+      <h1>CREATE INVOICE</h1>
+    </div>
+  </div>
+  
+  <div class="cs-spinner full-page" *ngIf = "loading_list">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner></mat-spinner>
+        <P>LOADING . . .</P>
+      </div>
+    </div>
+  </div>
+  
+  <div  class="cs-container pt60">
+    <div class="row">
+      <div class="col-12">
+        <div class="right-data pl0">
+          <div class="contst  height-calc  padding0">
+            <mat-dialog-content class="convert-franchies-modle">
+              <div class="m-body">
+                <div class="row">
+                  <div class="col-3 plan-list step1 shadow-none">
+                    <div class="head">
+                      <div class="csn-heading"  [ngClass]="{'active':active.user1==true}">
+                        
+                        <h2>BRANCHES</h2>
+                        
+                        <button class="search-icon" (click)="toggleterritory1('user1','open')" >
+                          <i class="material-icons">search</i>
+                        </button>
+                        
+                        <div class="search">
+                          
+                          <i class="material-icons sc-icon">search</i>
+                          <input style="width: 100% !important;" type="text" placeholder="search..."  (input)="getItemscheckin('con2',search2.search1)" #search1="ngModel" [(ngModel)]="search2.search1">
+                          
+                          <button (click)="toggleterritory1('user1','close')">
+                            <i class="material-icons">clear</i>
+                          </button>
+                        </div>
+                      </div>   
+                    </div>
+                    
+                    <div class="listing">
+                      <mat-radio-group class="step1" (change)="clear()" [(ngModel)]="invoiceData.branch_id">
+                        <div *ngFor="let row of branchesList">
+                          <mat-radio-button [value]="row.id" *ngIf="row.id !=branch_from_id ">
+                            <span class="name-counter" *ngIf="row.branch_name" >{{row.branch_name?row.branch_name[0].toUpperCase():''}}</span>
+                            <!-- <span class="name-counter"*ngIf="!row.company_name">{{row.name?row.name[0].toUpperCase():''}}</span> -->
+                            <div class="txt-box">
+                              <p *ngIf="row.branch_name">{{row.branch_name}}</p>
+                              <!-- <p *ngIf="!row.company_name">{{row.name}}</p> -->
+                              <p>{{row.branch_mobile}}</p>
+                            </div>
+                            
+                          </mat-radio-button>
+                        </div>
+                      </mat-radio-group>
+                      
+                      
+                      
+                      <!-- <mat-radio-group class="step1" (change)="clear()" [(ngModel)]="invoiceData.branch_id" >
+                        <div *ngFor="let row of branchesList" >
+                          <mat-radio-button *ngIf="row.id !=branch_from_id " >
+                            <span  class="name-counter" >{{row.branch_name?row.branch_name[0].toUpperCase():''}}</span>
+                            <div class="txt-box">
+                              <p >{{row.branch_name}}</p>
+                            </div>
+                          </mat-radio-button>
+                        </div>
+                        
+                      </mat-radio-group> -->
+                      
+                    </div>
+                    
+                    
+                  </div>
+                  
+                  <div class="col-9" *ngIf="invoiceData.branch_id">
+                    
+                    
+                    <form name="invoiceForm" (ngSubmit)="f.form.valid && AddItem(f)" #f="ngForm" novalidate>
+                      
+                      <div class="form-field " *ngIf="invoiceData.branch_id">
+                        <div class="row padding15 pt0 pb0">
+                          <div class="control-field col-12 cs-heading">
+                            <h2>SELECT PART</h2>
+                          </div>
+                        </div>
+                        <div class="row padding15 pt0 ">
+                          <div class="control-field col-3 mb20">
+                            <div class="ng-autocomplete wp100 mt12">
+                              <label>
+                                  Equipment Id*
+                              </label>
+                              <ng-autocomplete 
+                              [data]="categoryList"
+                              [searchKeyword]="keyword"
+                              (selected)='selectEvent($event)'
+                              (inputChanged)='onChangeSearch($event)'
+                              (inputFocused)='onFocused($event)'
+                              [itemTemplate]="itemTemplate"
+                              [notFoundTemplate]="notFoundTemplate">                                 
+                            </ng-autocomplete>
+                            
+                            <ng-template #itemTemplate let-item>
+                              <a [innerHTML]="item.part_number"></a>
+                            </ng-template>
+                            
+                            <ng-template #notFoundTemplate let-notFound>
+                              <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                          </div>
+                        </div>
+                        
+                        <div class="control-field col-3"  *ngIf="data.part_id">
+                          <mat-form-field class="example-full-width cs-input">
+                            <input matInput placeholder="Fresh Stock" name="fresh_stock" [(ngModel)]="data.fresh_stock"  #fresh_stock="ngModel" readonly>
+                          </mat-form-field>
+                        </div>               
+                        
+                        <div class="control-field col-3"  *ngIf="data.part_id">
+                          <mat-form-field class="example-full-width cs-input">
+                            <input matInput placeholder="Transfer Qty"  name="transfer_qty" (input)="checkFrshStock(data.transfer_qty)" [(ngModel)]="data.transfer_qty"  #transfer_qty="ngModel" required>
+                          </mat-form-field>
+                        </div>
+                        
+                        <div class="control-field col-1" *ngIf="data.part_id">
+                          <div class="plus-btn" style="right: inherit; top: 14px;">
+                            <button type="submit" mat-raised-button color="warn" class="mt2">
+                              <i class="material-icons">add</i>
+                            </button>
+                          </div>
+                        </div>
+                       
+                        
+                        <div class="cs-table mt15 calc-scroll" *ngIf="invoiceItemList.length && invoiceData.branch_id">
+                          <div class="header mt0" style="padding: 0px 15px;">
+                            <table>
+                              <tr>
+                                <th>Equipment Id</th>
+                                <th>Size</th>
+                                <th class="w200">Description</th>
+                                <th class="w150">Price</th>
+                                <th class="w150">Transfer Qty</th>
+                                <th class="w150">Total Price</th>
+                                <th class="w150">Branch Stock</th>
+                              </tr>
+                            </table>
+                          </div>
+                          <div class="table-container">
+                            <div class="table-body">
+                              <table>
+                                <tr *ngFor="let raw of invoiceItemList; let d = index">
+                                  <td>{{ raw.part_number }}</td>
+                                  <td>{{ raw.dimensions }}</td>
+                                  <td class="w200">{{ raw.description }}</td>
+                                  <td class="w150">{{ raw.rental_price }}</td>
+                                  <td class="w150">
+                                    <div class="edit-td-input active">
+                                      <input  placeholder="TRANSFER QTY." [(ngModel)]="raw.transfer_qty" [ngClass]="{'red' : raw.grater_stock }" type="number"  (input)="update_qty(d,raw.transfer_qty,raw.rental_price)" [name]="'transfer_qty'+d" #transfer_qty="ngModel"  class="wp100 pr0">
+                                    </div>
+                                  </td>
+                                  <td class="w150">{{ raw.amount }}</td>
+                                  <td class="w150">{{ raw.fresh_stock }}
+                                    <div class="action-btns">
+                                      <div class="outer">
+                                        <div class="innear">
+                                          <a (click)="RemoveItem(d)" mat-button class="delete"><i class="material-icons">delete_sweep</i> Delete</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                          
+                          
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  
+                  
+                </div>
+              </div>
+            </div>
+          </mat-dialog-content>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row" *ngIf="invoiceItemList.length">
+    <div class="col-8 padding0 mt15">
+     <div class="right-data">
+       <div class="contst">
+        <div class="box-desi mt15">
+          <div class="control-field col-12 cs-heading">
+            <h2>Tranport Info</h2>
+          </div>
+          <div class="cont">
+            <div class="form-field">
+              <div class="row">
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Vehicle Type" name ="ve_type"  [(ngModel)]="invoiceData.ve_type"  #ve_type="ngModel" >
+                  </mat-form-field>
+                </div>
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Vehicle No." name ="ve_no"  [(ngModel)]="invoiceData.ve_no"  #ve_no="ngModel" >
+                  </mat-form-field>
+                </div>
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Vehicle Freight" name ="ve_freight"  [(ngModel)]="invoiceData.ve_freight"  #ve_freight="ngModel" >
+                  </mat-form-field>
+                </div>
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Driver Name " name ="ve_driver_name"  [(ngModel)]="invoiceData.ve_driver_name"  #ve_driver_name="ngModel" >
+                  </mat-form-field>
+                </div>
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Driver Mobile No. " name ="ve_mobile_no"  [(ngModel)]="invoiceData.ve_mobile_no"  #ve_mobile_no="ngModel" >
+                  </mat-form-field>
+                </div>
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="Name Of Transport " name ="ve_transport"  [(ngModel)]="invoiceData.ve_transport"  #ve_transport="ngModel" >
+                  </mat-form-field>
+                </div>
+                
+                <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="HSN Code" name ="hsn"  [(ngModel)]="invoiceData.hsn"  #hsn="ngModel" >
+                  </mat-form-field>
+                </div>
+                
+                <!-- <div class="control-field col-4">
+                  <mat-form-field class="example-full-width cs-input">
+                    <input matInput placeholder="SAC Code" name ="sac"  [(ngModel)]="invoiceData.sac"  #sac="ngModel" >
+                  </mat-form-field>
+                </div>
+                 -->
+                 
+              </div> 
+            </div>
+          </div>
+        </div>
+       </div>
+     </div>
+    </div>
+    <div class="col-4">
+      <div class="invoice-details" style="padding: 15px 30px 15px 15px;">
+        <table class="invoice-table">   
+          <tr>
+            <td class="w200 td">Total Amount</td>
+            <td class="td"> {{invoiceData.total_amount}}</td>
+          </tr>    
+          
+          <tr>
+            <td class="w200 td">Total Qty	</td>
+            <td class="td"> {{invoiceData.total_qty}}</td>
+          </tr>                        
+          <tr>
+            
+            <td class="w200 td">GST	</td>
+            <td class="td">
+              <div class="edit-td-input active">
+                <input  placeholder="GST %" name="gst"  [(ngModel)]="invoiceData.gst_per"  name="gst_per"  (input)="cal()" class="wp30 pr0">
+              </div>
+            </td>
+            
+          </tr> 
+          
+          <tr *ngIf="invoiceData.igst_amount">
+            <td class="w200 td">IGST	</td>
+            <td class="td">&#8377; {{invoiceData.igst_amount}}</td>
+          </tr> 
+          
+          <tr *ngIf="invoiceData.cgst_amount">
+            <td class="w200 td">CGST	</td>
+            <td class="td">&#8377; {{invoiceData.cgst_amount}}</td>
+          </tr>   
+          <tr *ngIf="invoiceData.sgst_amount">
+            <td class="w200 td">SGST	</td>
+            <td class="td">&#8377; {{invoiceData.sgst_amount}}</td>
+          </tr> 
+          
+          <!-- <tr>
+            
+            <td class="w200 td">Shipping charge	</td>
+            <td class="td">
+              <div class="edit-td-input active">
+                <input  placeholder="Shipping Charge" name="shipping_charge"  [(ngModel)]="purchase_form.shipping_charge"  name="shipping_charge"  (input)="cal()" class="wp30 pr0">
+              </div>
+            </td>
+            
+          </tr>  -->
+          
+          <tr>
+            <td class="w200 td">Total Amount	</td>
+            <td class="td">&#8377; {{invoiceData.net_amount}}</td>
+          </tr>                            
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div *ngIf="invoiceItemList.length && invoiceData.branch_id && false" class="row" >
+    <div class="col-8">&nbsp;</div>
+    <div class="col-4">
+      <div class="invoice-details">
+        
+        <table class="invoice-table">
+          <tr>
+            <td class="td">Item Total</td>
+            <td class="w150 td">&#8377;  {{invoiceData.itemTotal.toFixed(2)}}
+            </td>
+          </tr>
+          <tr >
+            <td class="td">
+              
+              <div class="add-disc">
+                Discount({{invoiceData.netDiscountPer}}%)
+                <div class="basic-select">
+                  <!-- <input class="simple-input w70" placeholder="More" [(ngModel)]="invoiceData.extra_discount" type="number" min="0" (input)="allItemDiscount()" name="extra_discount" #extra_discount="ngModel"  style="text-align: right;"> -->
+                  
+                  <div class="basic-select">
+                    <select  (change)="allItemDiscount()"  [(ngModel)]="invoiceData.extra_discount" name="extra_discount" #extra_discount="ngModel" style="background: transparent; border: 0px;" >
+                      <option value="0">More</option>
+                      <option value="1">1 %</option>
+                      <option value="2">2 %</option>
+                      <option value="3">3 %</option>
+                      <option value="4">4 %</option>
+                      <option value="5">5 %</option>
+                      <option value="6">6 %</option>
+                      <option value="7">7 %</option>
+                      <option value="8">8 %</option>
+                      <option value="9">9 %</option>
+                      <option value="10">10 %</option>
+                      <option value="11">11 %</option>
+                      <option value="11">11 %</option>
+                      <option value="12">12 %</option>
+                      <option value="13">13 %</option>
+                      <option value="14">14 %</option>
+                      <option value="15">15 %</option>
+                      <option value="16">16 %</option>
+                      <option value="17">17 %</option>
+                      <option value="18">18 %</option>
+                      <option value="19">19 %</option>
+                      <option value="20">20 %</option>
+                      <option value="21">21 %</option>
+                      <option value="22">22 %</option>
+                      <option value="23">23 %</option>
+                      <option value="24">24 %</option>
+                      <option value="25">25 %</option>
+                      <option value="26">26 %</option>
+                      <option value="27">27 %</option>
+                      <option value="28">28 %</option>
+                      <option value="29">29 %</option>
+                      <option value="30">30 %</option>
+                    </select>
+                  </div>
+                  
+                </div>
+              </div>
+            </td>
+            <td class="td">
+              &#8377;  {{invoiceData.netDiscountAmount}}
+            </td>
+          </tr>
+          
+          
+          
+          <!-- *ngIf="invoiceData.netDiscountAmount" -->
+          <tr >
+            <td class="td">Sub Total</td>
+            <td class="w150 td">&#8377;  {{invoiceData.netGrossAmount.toFixed(2)}}</td>
+          </tr>
+          
+          <tr>
+            <td class="td">Shipping Charges({{ (this.invoiceData.shipping_charges > 0 )?invoiceData.shiping_gst_per : 0}}%)</td>
+            <td class="td">   
+              
+              <input class="simple-input w70" [(ngModel)]="invoiceData.shipping_charges" type="number" min="0" (input)="calculateNetInvoiceTotal()" name="shipping_charges" #shipping_charges="ngModel"  style="text-align: right;">
+              
+            </td>
+          </tr>
+          <!-- <tr>
+            <td class="td">Gst Amount</td>
+            <td class="td">&#8377; {{invoiceData.netGstAmount}}</td>
+          </tr> -->
+          <!--             
+            <tr *ngIf="invoiceData.cgst_amt > 0">
+              <td class="td">CGST({{invoiceData.cgst_per}}%)</td>
+              <td class="td">&#8377; {{invoiceData.cgst_amt}}</td>
+            </tr>
+            
+            <tr *ngIf="invoiceData.sgst_amt > 0">
+              <td class="td">SGST({{invoiceData.sgst_per}}%)</td>
+              <td class="td">&#8377; {{invoiceData.sgst_amt}}</td>
+            </tr> -->
+            
+            <tr *ngIf="invoiceData.cgst_amt > 0 && invoiceData.sgst_amt > 0" >
+              <td class="td">
+                <div class="gst-box">
+                  <ul>
+                    <li >
+                      <p>CGST ({{invoiceData.cgst_amt}}) </p>
+                    </li>
+                    <li class="w30"  >
+                      <i class="material-icons">add</i>
+                    </li>
+                    <li >
+                      <p>SGST ({{invoiceData.sgst_amt}})</p>
+                    </li>
+                  </ul>
+                </div>
+                <!-- <div class="gst-box">
+                  <ul>
+                    <li>
+                      <div>
+                        <p>CGST (5%)</p>
+                        <p>2000</p>
+                      </div>
+                    </li>
+                    <li class="w30">
+                      <i class="material-icons">add</i>
+                    </li>
+                    <li>
+                      <div>
+                        <p>SGST (5%)</p>
+                        <p>2000</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div> -->
+              </td>
+              <td class="td">{{invoiceData.netGstAmount}}</td>
+            </tr>
+            
+            <tr *ngIf="invoiceData.igst_amt > 0">
+              <td class="td">IGST({{invoiceData.igst_per}}%)</td>
+              <td class="td">&#8377; {{invoiceData.igst_amt}}</td>
+            </tr>
+            
+            
+            
+            
+            
+            
+            
+            
+            <tr>
+              <td class="td">Grand Amount</td>
+              <td class="td">
+                &#8377;  {{invoiceData.netAmount.toFixed(2)}}
+              </td>
+            </tr>
+            
+            <tr>
+              <td class="td">Received Amount</td>
+              <td class="td">  
+                <input  class="simple-input w70" type="number" [(ngModel)]="invoiceData.receivedAmount" name="receivedAmount" #receivedAmount="ngModel"  (input)="onReceivedChangeHandler()" style="text-align: right;">                  
+                <!-- <div class="form-field">
+                  <div class="row">
+                    <div class="control-field" style="padding-top: 0px !important;">
+                      <mat-form-field class="example-full-width cs-input">
+                        
+                        <input matInput placeholder="Received Amount" type="number" [(ngModel)]="invoiceData.receivedAmount" name="receivedAmount" #receivedAmount="ngModel"  (input)="onReceivedChangeHandler()" >
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div> -->
+              </td>
+            </tr>
+            
+            <tr *ngIf="invoiceData.receivedAmount && invoiceData.receivedAmount>0">
+              <td class="td">Mode</td>
+              <td class="td">
+                
+                <select name="mode" [(ngModel)]="invoiceData.mode" required>
+                  <option value="None">None</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="Payment Gateway">Payment Gateway</option>
+                  <option value="NEFT">NEFT</option>
+                </select>
+                <p class="red-clr" *ngIf="!invoiceData.mode">This field is required</p>
+                
+                <!-- <div class="form-field">
+                  <div class="row">
+                    <div class="control-field" style="padding-top: 0px !important;">
+                      <mat-form-field class="cs-multi-select">
+                        <mat-select name="mode" [(ngModel)]="invoiceData.mode" required>
+                          
+                          <mat-option value="Cash">
+                            <small>Cash</small>
+                          </mat-option>
+                          
+                          <mat-option value="Cheque">
+                            <small>Cheque</small>
+                          </mat-option>
+                          
+                          <mat-option value="NEFT">
+                            <small>NEFT</small>
+                          </mat-option>
+                          
+                        </mat-select>
+                      </mat-form-field>
+                      
+                      <mat-error color="primary" *ngIf="!invoiceData.mode" >This field is required</mat-error>
+                    </div>
+                  </div>
+                </div> -->
+              </td>
+            </tr>
+            
+            <tr *ngIf="invoiceData.balance">
+              <td class="td">Balance</td>
+              <td class="td">&#8377; {{invoiceData.balance.toFixed(2)}}</td>
+            </tr>
+            <tr *ngIf="invoiceData.balance">
+              <td class="td">Due Date</td>
+              <td class="td">
+                <mat-form-field class="cs-input cs-date-picker w100">
+                  <input placeholder="DATE" [(ngModel)]="invoiceData.due_terms" name="due_terms" required matInput [matDatepicker]="picker" required="invoiceData.balance?true:false">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </td>
+            </tr>
+            
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="invoiceItemList.length && invoiceData.branch_id && !grater_stock  && !required_qty" class="row">
+      <div class="col-12">
+        <div class="dubble-btn">
+          <!-- <div class="cs-btn outline mt32 mr12 text-right">
+            <div class="in-btn ">
+              <button mat-raised-button color="primary">PREVIEW</button>
+            </div>
+          </div> -->
+          <div class="cs-btn mt15 mr12 text-right" [ngClass]="{loading: savingData}">
+            <div class="in-btn ">
+              <button (click)="(invoiceData.receivedAmount>0 &&  !invoiceData.mode && invoiceData.branch_id == '') ? '' : submit_sales_invoice()"   mat-raised-button color="warn">TRANSFER STOCK</button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="h50"></div>

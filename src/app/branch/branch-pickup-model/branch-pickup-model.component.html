@@ -1,0 +1,232 @@
+<div class="stock-module">
+
+    <mat-dialog-content class="convert-franchies-modle di-hidden">
+        <div class="header top-header" style="padding: 0px 10px 10px 10px;">
+          <h1>Pickup Stock From Consignee</h1>
+          <button mat-button color="primary" mat-dialog-close class="mr0"><i class="material-icons">clear</i></button>
+        </div>
+      
+        <div class="m-body form-field">
+      
+        <div class="cs-row"  *ngIf="part_data.mode == '1'">
+          <div class="right-data pl0">
+            <div class="contst mb15">
+              <div class="cs-heading">
+                <h2>Tranport Information</h2>
+              </div>
+              <div class="form-field">
+                <div class="row">
+                  <div class="control-field col-4 mt10">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput placeholder="Vehicle Type" name ="ve_type"  [(ngModel)]="purchase_form.ve_type"  #ve_type="ngModel" >
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="control-field col-4 mt10">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput placeholder="Vehicle No." name ="ve_no"  [(ngModel)]="purchase_form.ve_no"  #ve_no="ngModel" >
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="control-field col-4 mt10">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput placeholder="Vehicle Freight" name ="ve_freight"  [(ngModel)]="purchase_form.ve_freight"  #ve_freight="ngModel" >
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="control-field col-4 ">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput placeholder="Driver Name " name ="ve_driver_name"  [(ngModel)]="purchase_form.ve_driver_name"  #ve_driver_name="ngModel" >
+                    </mat-form-field>
+                  </div>
+                  <div class="control-field col-4 ">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput placeholder="Driver Mobile No. " name ="ve_mobile_no"  [(ngModel)]="purchase_form.ve_mobile_no"  #ve_mobile_no="ngModel" >
+                    </mat-form-field>
+                  </div>
+                  <div class="control-field col-4 ">
+                    <mat-form-field class="example-full-width cs-input">
+                      <input matInput placeholder="Name Of Transport " name ="ve_transport"  [(ngModel)]="purchase_form.ve_transport"  #ve_transport="ngModel" >
+                    </mat-form-field>
+                  </div>
+                  
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      
+        <!-- <div class="m-body form-field"> -->
+          <div class="cs-table" *ngIf="part_data.mode == '1'">
+              <div class="cs-spinner full-page" *ngIf = "loading_list">
+                  <div class="outer">
+                      <div class="innear">
+                          <mat-spinner></mat-spinner>
+                          <P>LOADING . . .</P>
+                      </div>
+                  </div>
+              </div>
+            <div class="header" style="padding: 0px 15px;">
+              <table>
+               
+                <tr>
+                  <th class="w60">Item Type</th>
+                  <th class="w250 padding0">
+                      <table>
+                          <tr>
+                              <th>Equipment Id</th>
+                              <th>Dimensions</th>
+                              <th>Description</th>
+                              <th>Pickup</th>
+                              <th>Fresh Qty</th>
+                              <th>Maintenance Qty</th>
+                          </tr>
+                      </table>
+                  </th>
+                  <!-- <th class="w20 text-center">Fresh Qty</th> -->
+                  <!-- <th class="w20 text-center">Maintenance Qty</th> -->
+                  
+              </tr>
+
+              </table>
+            </div>
+            <div class="table-container module-scroll">
+              <div class="table-body">
+                <table>
+                
+                  <tr *ngFor="let c of stock_data; let i = index">
+                    <td class="w60">
+                        <div class="edit"><strong>{{c.type}}</strong><span>({{c.delivered_qty}})</span><p>{{c.part_number}}</p></div>
+                    </td>
+                    <ng-container  *ngIf="c.type == 'Combo' ">
+                        <td class="w250 padding0">
+                            <table class="small-font">
+                                <tr *ngFor="let part of c.combo_list; let x = index">
+                                    <td>{{part.part_number}}</td>
+                                    <td>{{part.dimensions}}</td>
+                                    <td>{{part.description}}</td>
+                                    <td > {{part.pending_qty}}</td>
+                                    <td>
+                                      <div class="edit-td-input">
+                                        <input  type="number" [(ngModel)]="part.pick_stock" (input)="checkComboStock( i , x )"  max="{{part.pending_qty}}" [name]="'pick_stock'+i+x" (keypress)="numeric_Number($event)"  min="1" required style="background: #f5f5f5;">
+                                      </div>
+                                  </td>
+
+                                  <td >
+                                    <div class="edit-td-input">
+                                        <!-- [disabled]="c.type == 'Combo' " -->
+                                        <!-- (input)="checkFrshStock(data.transfer_qty)" -->
+                                      <!-- <input  type="number" [(ngModel)]="part.pick_stock_maintenance"  [name]="'pick_stock_maintenance'+i+x" (keypress)="numeric_Number($event)" max="{{c.delivered_qty}}" min="1" style="background: #f5f5f5;"> -->
+                                    </div>
+                                </td>
+
+                                </tr>
+                            </table>
+                        </td>
+                    </ng-container>
+                    
+                    <ng-container  *ngIf="c.type == 'Part' ">
+                        <td class="w250 padding0">
+                            <table class="small-font">
+                                <tr >
+                                    <td>{{c.part_number}}</td>
+                                    <td>{{c.dimensions}}</td>
+                                    <td>{{c.description}}</td>
+                                    <td > <strong> {{c.delivered_qty}} </strong> </td>
+
+                                    <td >
+                                        <div class="edit-td-input">
+                                          <input  type="number" [(ngModel)]="c.pick_stock"  (input)="checkPartStock(i)" [name]="'pick_stock'+i" (keypress)="numeric_Number($event)" max="{{c.delivered_qty}}" min="1"  style="background: #f5f5f5;">
+                                        </div>
+                                    </td>
+                                    <td >
+                                      <div class="edit-td-input">
+                                          <!-- [disabled]="c.type == 'Combo' "  -->
+                                        <input  type="number" [(ngModel)]="c.pick_stock_maintenance" (input)="checkPartStock(i)" [name]="'pick_stock_maintenance'+i" (keypress)="numeric_Number($event)" max="{{c.delivered_qty}}" min="1" style="background: #f5f5f5;">
+                                      </div>
+                                  </td>
+
+                                  
+
+                                </tr>
+                            </table>
+                        </td>
+                    </ng-container>
+                    
+                    <!-- <td class="w20 center-align">
+                      <div class="edit-td-input">
+                        <input  type="number" [(ngModel)]="c.pick_stock" (input)="checkFrshStock(data.transfer_qty)" [name]="'pick_stock'+i" (keypress)="numeric_Number($event)" max="{{c.delivered_qty}}" min="1" required style="background: #f5f5f5;">
+                      </div>
+                  </td>
+      
+                  <td class="w20 center-align">
+                    <div class="edit-td-input">
+                      <input  type="number" [(ngModel)]="c.pick_stock_maintenance" (input)="checkFrshStock(data.transfer_qty)" [name]="'pick_stock_maintenance'+i" (keypress)="numeric_Number($event)" max="{{c.delivered_qty}}" min="1" [disabled]="c.type == 'Combo' " style="background: #f5f5f5;">
+                    </div> -->
+                <!-- </td> -->
+                </tr>
+
+
+
+
+
+
+
+
+
+
+
+                </table>
+              </div>
+            </div>
+          </div> 
+      
+          <div class="cs-table" *ngIf="part_data.mode == '2'">
+              <div class="cs-spinner full-page" *ngIf = "loading_list">
+                  <div class="outer">
+                      <div class="innear">
+                          <mat-spinner></mat-spinner>
+                          <P>LOADING . . .</P>
+                      </div>
+                  </div>
+              </div>
+            <div class="header" style="padding: 0px 15px;">
+              <table>
+                <tr>
+                  <th class="w40">&nbsp; S.No.</th>
+                  <th>Equipment Id</th>
+                  <th class="w120">Ready For Pickup</th>
+                  <!-- <th class="w120">InTransit Qty</th> -->
+                </tr>
+              </table>
+            </div>
+            <div class="table-container">
+              <div class="table-body">
+                <table *ngFor="let val of stock_data; let i = index" >
+                  <tr>
+                    <td class="w40">{{i+1}}</td>
+                    <td>{{val.part_number}}</td>
+                    <td class="w120 text-center">{{val.delivered_qty}}</td>
+                    <!-- <td class="w120">{{val.intransit_qty}}</td> -->
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div> 
+      
+        </div>
+      </mat-dialog-content>
+      
+      
+      <div mat-dialog-actions>
+       <div class="cs-btn wp100 text-right" *ngIf="part_data.mode == '1'">
+        <div class="in-btn">
+          <button type="submit"  (click)="save()" [disabled]="loading_list" class="cs-btn green-btn waves-effect default right mrr30 radius0" mat-raised-button color="warn">Save</button>
+        </div>
+       </div>
+      </div>
+      
+      
+      
+</div>

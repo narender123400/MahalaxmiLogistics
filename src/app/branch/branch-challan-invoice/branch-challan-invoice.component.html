@@ -1,0 +1,389 @@
+<div class="main-container">
+  <div class="cs-spinner full-page" *ngIf = "!loading_list">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner></mat-spinner>
+        <P>LOADING . . .</P>
+      </div>
+    </div>
+  </div>
+  <div class="master-heading bcspace">
+    <div class="back-btn">
+      <a (click)="db.goBack()"  mat-menu-item>
+        <i class="material-icons">arrow_right_alt</i></a>
+      </div>
+      <div class="heading">
+        <h1>INVOICE</h1>
+      </div>
+    </div>
+    <div class="cs-container detail">
+      <form name="form"  #d="ngForm" (ngSubmit)="d.form.valid ? add_receive_order_detail() : '' "  novalidate>
+        <!-- <div class="row">
+          <div class="col-12">
+            <div class="right-data pl0">
+              <div class="contst">
+                <div class="cs-heading">
+                  <h2>Invoice Detail</h2>
+                  <p><i class="material-icons ic-watch">watch_later</i>{{orderdetail.date_created  | date: 'dd MMM yyyy'}}</p>
+                </div>
+                <div class="cs-divider pt10">
+                  <mat-divider></mat-divider>
+                </div>  
+                
+                <div class="form-field">
+                  <div class="row">
+                    <div class="col-3">
+                      <div class="control-field">
+                        <mat-form-field class="cs-input cs-date-picker">
+                          <input placeholder="DATE" [(ngModel)]="purchase_form.invoice_date" name="invoice_date" required matInput [matDatepicker]="picker" required>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="control-field col-12 ">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" [(ngModel)]="purchase_form.invoice_no" name="invoice_no" required matInput placeholder="Invoice No " required>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  
+                    <div class="col-2">
+                      <div class="control-field col-12 ">
+                        <div class="cs-file mt10">
+                          <label>
+                            
+                            <input type="file" required (change)="fileChange($event)"  placeholder="Upload Copy of Challan" name="invoice_doc" accept=".png,.jpg,.jpeg" >
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  
+
+                    <div class="control-field col-3">
+                      <mat-form-field class="example-full-width cs-input">
+                        <textarea matInput placeholder="Receive Note " name="receive_note" [(ngModel)]="purchase_form.receive_note" class="h100" ></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="cs-divider pt20 left-right-15">
+                    <mat-divider></mat-divider>
+                  </div>
+                </div>
+              </div>
+            </div>        
+          </div>     
+        </div>    -->
+
+
+
+
+
+        <!-- <div class="col-3">
+          <div class="control-field col-12 ">
+            <mat-form-field class="example-full-width cs-input">
+              <input type="text" [(ngModel)]="purchase_form.sac" name="sac"  matInput placeholder="SAC " >
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-3">
+          <div class="control-field col-12 ">
+            <mat-form-field class="example-full-width cs-input">
+              <input type="text" [(ngModel)]="purchase_form.sac_desc" name="sac_desc"  matInput placeholder="SAC Description" >
+            </mat-form-field>
+          </div>
+        </div> -->
+
+        <div class="row">
+          <div class="col-12">
+            <!-- <div class="cs-heading mt20 mb10">
+              <h2>INVOICE ITEM DETAILS</h2>
+            </div> -->
+            
+            <div class="cs-table left-right-15">
+              <div class="header">
+                <table class="sno-border">
+                  <tr>
+                    <th class="w20">S.No.</th>
+                    <th class="w60">Item Type</th>
+                    <th class="w400 padding0">
+                        <table>
+                            <tr>
+                                <th class="w180">Equipment Id</th>
+                                <th>Dimensions</th>
+                                <th>Description</th>
+                            </tr>
+                        </table>
+                    </th>
+                    <th class="w50 text-center">Total Order QTY</th>
+                    <th class="w50 text-center">Deliver QTY</th>
+                    <th class="w50 text-center">Rental Price</th>
+                    <th class="w50 text-center">Total Rent</th>
+                </tr>
+                </table>
+              </div>
+              <div class="table-container">
+                <div class="table-body">
+                  <table>
+                      <tr *ngFor="let c of itemdetail; let i = index">
+                          <td class="w20">{{i+1}}</td>
+                          <td class="w60">
+                              <div class="edit"><strong>{{c.type}}</strong><p *ngIf="c.type == 'Combo' ">{{c.combo_name | titlecase}}</p></div>
+                          </td>
+
+                          <ng-container  *ngIf="c.type == 'Combo' ">
+                              <td class="w400 padding0">
+                                  <table class="small-font">
+                                      <tr *ngFor="let part of c.combo_list; let x = index">
+                                          <td class="w180">{{part.part_number}} <strong>{{part.qty}}({{part.combo_qty}}) - {{part.fresh_stock ? part.fresh_stock : 0 }} </strong></td>
+                                          <td>{{part.dimensions}}</td>
+                                          <td>{{part.description}}</td>
+                                      </tr>
+                                  </table>
+                              </td>
+                          </ng-container>
+
+                          <ng-container  *ngIf="c.type == 'Part' ">
+                              <td class="w400 padding0">
+                                  <table class="small-font">
+                                      <tr >
+                                          <td class="w180">{{c.part_number}}</td>
+                                          <td>{{c.dimensions}}</td>
+                                          <td>{{c.description}}</td>
+                                      </tr>
+                                  </table>
+                              </td>
+                          </ng-container>
+
+                          <td class="w50 text-center">{{c.qty}}</td>
+                          <td class="w50 text-center">
+                            <div class="edit-td-input">
+                                <input  type="number" disabled [(ngModel)]="c.accept_qty" (keyup)="val_accept(i)" [name]="'accept_qty'+i" (keypress)="numeric_Number($event)"  min="1" required style="background: #f5f5f5;">
+                            </div>
+                          </td>
+                          <td class="w50">&#8377; {{c.rental_price}}</td>
+                          <td class="w50">&#8377; {{c.deliver_rantal}}</td>
+                      </tr>
+                  </table>
+              </div>
+              </div>
+            </div>     
+          </div>
+        </div>
+
+       
+        
+
+     
+
+       
+
+      <div class="row" *ngIf="purchase_form.total_qty > 0">
+        <div class="col-8 empty">
+          <div class="cs-row">
+            <div class="right-data pl0">
+              <div class="contst mb15">
+                <div class="cs-heading">
+                  <h2>Tranport Information</h2>
+                </div>
+                <div class="form-field">
+                  <div class="row"> 
+                    <div class="control-field col-4 mt10 pl0 pr0">
+                      <mat-form-field class="example-full-width cs-input">
+                        <input matInput placeholder="Vehicle Type" name ="ve_type"  [(ngModel)]="purchase_form.ve_type"  #ve_type="ngModel" >
+                      </mat-form-field>
+                    </div>
+                    
+                    <div class="control-field col-4 mt10  pl0 pr0">
+                      <mat-form-field class="example-full-width cs-input">
+                        <input matInput placeholder="Vehicle No." name ="ve_no"  [(ngModel)]="purchase_form.ve_no"  #ve_no="ngModel" >
+                      </mat-form-field>
+                    </div>
+                    
+                    <div class="control-field col-4 mt10 ">
+                      <mat-form-field class="example-full-width cs-input">
+                        <input matInput placeholder="Vehicle Freight" name ="ve_freight"  [(ngModel)]="purchase_form.ve_freight"  #ve_freight="ngModel" >
+                      </mat-form-field>
+                    </div>
+                    
+                    <div class="control-field col-4 pl0 pr0">
+                      <mat-form-field class="example-full-width cs-input  ">
+                        <input matInput placeholder="Driver Name " name ="ve_driver_name"  [(ngModel)]="purchase_form.ve_driver_name"  #ve_driver_name="ngModel" >
+                      </mat-form-field>
+                    </div>
+                    <div class="control-field col-4   pl0 pr0">
+                      <mat-form-field class="example-full-width cs-input">
+                        <input matInput placeholder="Driver Mobile No. " name ="ve_mobile_no"  [(ngModel)]="purchase_form.ve_mobile_no"  #ve_mobile_no="ngModel" >
+                      </mat-form-field>
+                    </div>
+                    <div class="control-field col-4 ">
+                      <mat-form-field class="example-full-width cs-input">
+                        <input matInput placeholder="Name Of Transport " name ="ve_transport"  [(ngModel)]="purchase_form.ve_transport"  #ve_transport="ngModel" >
+                      </mat-form-field>
+                    </div>
+                    
+                  </div> 
+                </div>
+                
+                <div class="cs-heading mt15 mb15">
+                  <h2>Invoice Information</h2>
+                </div>
+                
+                <div class="form-field ">
+                  <div class="row">
+                    <div class="col-3  pl0 pr0">
+                      <div class="control-field">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" placeholder="SAC" [(ngModel)]="purchase_form.sac" name="sac" class="cs-inputs"  matInput   >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    
+                    
+                    <!-- <div class="col-3  pl0 pr0">
+                      <div class="control-field">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" placeholder="HSN Code" [(ngModel)]="purchase_form.hsn" name="hsn" class="cs-inputs"  matInput   >
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+                    
+                    
+                    <div class="col-3  pl0 pr0">
+                      <div class="control-field">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" placeholder="Customer Part Number" [(ngModel)]="purchase_form.customer_part_number" name="customer_part_number" class="cs-inputs"  matInput   >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    
+                    
+                    
+                    <div class="col-3  pl0">
+                      <div class="control-field">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" placeholder="PO No." [(ngModel)]="purchase_form.p_o_n" name="p_o_n" class="cs-inputs"  matInput  >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    
+                    
+                    <div class="col-8 pl0">
+                      <div class="control-field">
+                        <mat-form-field class="example-full-width cs-input">
+                          <input type="text" placeholder="SAC Description" [(ngModel)]="purchase_form.sac_desc" name="sac_desc" class="cs-inputs"  matInput  >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-4">
+          <div class="invoice-details" style="padding: 15px 30px 15px 15px;">
+            <table class="invoice-table">                           
+                <tr>
+                  <td class="w200 td">Total Qty	</td>
+                  <td class="td">{{purchase_form.total_qty}}</td>
+                </tr>
+              
+                <tr>
+                  <td class="w200 td">Total Amount	</td>
+                  <td class="td">&#8377; {{purchase_form.total_amount}}</td>
+                </tr>
+
+                <tr>
+
+                    <td class="w200 td">GST	</td>
+                    <td class="td">
+                       <div class="edit-td-input active">
+                      <input  placeholder="GST %" name="gst"  [(ngModel)]="purchase_form.gst_per"  name="gst_per"  autocomplete="off"  (input)="cal()" class="wp30 pr0">
+                    </div>
+                  </td>
+  
+                </tr> 
+                
+                <tr *ngIf="purchase_form.igst_amount">
+                  <td class="w200 td">IGST	</td>
+                  <td class="td">&#8377; {{purchase_form.igst_amount}}</td>
+              </tr> 
+              
+                <tr *ngIf="purchase_form.cgst_amount">
+                  <td class="w200 td">CGST	</td>
+                  <td class="td">&#8377; {{purchase_form.cgst_amount}}</td>
+              </tr>   
+              <tr *ngIf="purchase_form.sgst_amount">
+                <td class="w200 td">SGST	</td>
+                <td class="td">&#8377; {{purchase_form.sgst_amount}}</td>
+            </tr>   
+
+            <tr>
+
+                <td class="w200 td">Shipping charge	</td>
+                <td class="td">
+                   <div class="edit-td-input active">
+                  <input  placeholder="Shipping Charge" name="shipping_charge"  [(ngModel)]="purchase_form.shipping_charge"  name="shipping_charge"  (input)="cal()" class="wp30 pr0">
+                </div>
+              </td>
+  
+            </tr> 
+                <tr>
+                  <td class="w200 td">Net Amount	</td>
+                  <td class="td">&#8377; {{purchase_form.actual_amount}}</td>
+                </tr>
+
+                <!-- <tr>
+                    <td class="td">Receive Amount</td>
+                    <td class="td">  
+                      <input  class="simple-input w70" type="number" [(ngModel)]="purchase_form.receivedAmount" name="receivedAmount" #receivedAmount="ngModel"  (input)="onReceivedChangeHandler()" style="text-align: right;">                  
+                   
+                    </td>
+                  </tr> -->
+            
+                  
+
+                <!-- <tr *ngIf="purchase_form.receivedAmount && purchase_form.receivedAmount>0">
+                    <td class="td">Mode</td>
+                    <td class="td">
+      
+                        <select name="mode" [(ngModel)]="purchase_form.mode" (change)="changeMode()" required>
+                            <option value="">Select Mode</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Payment Gateway">Payment Gateway</option>
+                            <option value="NEFT">NEFT</option>
+                          </select>
+      
+                    
+                    </td>
+                  </tr> -->
+            
+                  
+
+            </table>
+          </div>
+        </div>
+      </div>
+
+        <div class="row"  *ngIf="purchase_form.total_qty > 0">
+          <div class="col-12">
+            <div class="cs-btn mt32 text-right"  [ngClass]="{loading: !loading_list}">
+              <div class="in-btn">
+                <button type="submit" class="cs-btn green-btn waves-effect default right mrr30 radius0" mat-raised-button color="primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="h100"></div>

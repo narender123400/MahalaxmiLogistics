@@ -1,0 +1,46 @@
+<div class="stock-module">
+  <mat-dialog-content class="convert-franchies-modle di-hidden">
+    <div class="header top-header" style="padding: 0px 10px 10px 10px;">
+      <h1>Consignee Stock - {{ part_data.part_number }}</h1>
+      <button mat-button color="primary" mat-dialog-close class="mr0"><i class="material-icons">clear</i></button>
+    </div>
+    <div class="m-body form-field">
+      <div class="cs-table" >
+        <div class="header" style="padding: 0px 15px;">
+          <table>
+            <tr>
+              <th class="w30">&nbsp;</th>
+              <th>Consignee Name</th>
+              <!-- <th class="w120">InTransit Stock</th> -->
+              <th class="w120">Pickup</th>
+              <!-- <th class="w120">Picked Stock</th> -->
+            </tr>
+          </table>
+        </div>
+        <div class="table-container module-scroll">
+          <div class="table-body">
+            <table >
+              <ng-container *ngFor="let val of stock_data; let i = index" >
+                <!-- -->
+                <tr *ngIf=" (part_data.mode == '1' && val.total_pending_qty > 0 ) ||  ( part_data.mode == '2' && val.total_delivered_qty > 0 ) ">
+                  <td class="w30">{{i+1}}</td>
+                  <td >{{val.consignee_name }}</td>
+                  <!-- <td class="w120">{{val.total_pending_qty}}</td> -->
+                  <td class="w120">{{val.total_delivered_qty}}</td>
+                  <!-- <td class="w120">{{val.total_picked_stock}}</td> -->
+                </tr>
+              </ng-container>
+            </table>
+          </div>
+        </div>
+      </div> 
+      
+      
+      
+      
+      
+    </div>
+  </mat-dialog-content>
+  
+  
+</div>

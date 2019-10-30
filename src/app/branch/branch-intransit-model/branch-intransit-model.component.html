@@ -1,0 +1,80 @@
+<div class="stock-module">
+  <mat-dialog-content class="convert-franchies-modle di-hidden">
+    <div class="header top-header" style="padding: 0px 10px 10px 10px;">
+      <p>	Intransit</p>
+      <button mat-button  mat-dialog-close class="mr0"><i class="material-icons">clear</i></button>
+     
+    </div>
+  <div class="cs-table-tabs clr-tab tabs-bg mt0 cs-new-table ">
+    <ul>
+        <li (click)="mode='1';branchDetail() ">
+            <a [ngClass]="{'active': mode == '1'  }">
+                <p>Branch</p>
+            </a>
+        </li>
+        <li (click)="mode='2'; intransitConsigner()">
+            <a [ngClass]="{'active': mode == '2'  }"> 
+                <p>Consignor</p>
+            </a>
+        </li>
+    </ul>
+  </div>
+  
+  <div class="cs-table cs-table-2" *ngIf="mode == '1' " >
+    <div class="header padding0 mt10 ">
+        <table class="sno-border">
+          <tr >
+            <th class="w40">&nbsp;</th>
+            <th class="w170">Date</th>
+            <th >Branch Name</th>
+            <th class="w80 text-center">QTY</th>
+          </tr>
+        </table>
+    </div>
+    <div class="table-container module-scroll">
+        <div class="table-body">
+            <table>
+                <ng-container *ngFor="let p of branch; let i = index">
+                  <tr *ngIf="p.pending_qty != '0' ">
+                    <td class="w40">{{i+1}}</td>
+                    <td class="w170">{{p.date_created   | date: 'dd MMM yyyy'}} </td>
+                    <td >{{p.branch_name}}</td>
+                    <td class="w80 text-center">{{p.pending_qty}}</td>
+                  </tr>
+                </ng-container>
+            </table>
+        </div>
+    </div>
+  </div> 
+  
+  <div class="cs-table  cs-table-2" *ngIf="mode == '2' ">
+    <div class="header padding0 mt10">
+        <table class="sno-border">
+          <tr >
+            <th class="w40">&nbsp;</th>
+            <th >Consignor</th>
+            <th class="w80 text-center">Challan</th>
+            <th class="w80 text-center">Invoice</th>
+            <th class="w80 text-center">Total</th>
+          </tr>
+        </table>
+    </div>
+    <div class="table-container module-scroll">
+        <div class="table-body">
+            <table>
+              <ng-container *ngFor="let p of consignor; let i = index">
+                <tr *ngIf="p.total != '0' ">
+                  <td class="w40">{{i+1}}</td>
+                  <td >{{p.name}}</td>
+                  <td class="w80 text-center">{{ p.intransit_qty }}</td>
+                  <td class="w80 text-center">{{ p.inv_intransit_qty  }} </td>
+                  <td class="w80 text-center">{{ p.total }} </td>
+                </tr>
+              </ng-container>
+            </table>
+        </div>
+    </div>
+  </div>
+  
+  </mat-dialog-content>
+</div>

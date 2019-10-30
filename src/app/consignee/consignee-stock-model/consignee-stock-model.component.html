@@ -1,0 +1,89 @@
+<div class="stock-module">
+    <mat-dialog-content class="convert-franchies-modle di-hidden">
+        <div class="header top-header" style="padding: 0px 10px 10px 10px;">
+          <h1> {{ part_data.mode == '1' ? 'Consigner Stock' : 'Consignee Stock' }}</h1>
+          <button mat-button color="primary" mat-dialog-close class="mr0"><i class="material-icons">clear</i></button>
+        </div>
+        <div class="m-body form-field">
+          <div class="cs-table" *ngIf="part_data.mode == '1' ">
+            <div class="header" style="padding: 0px 15px;">
+              <table>
+                <tr>
+                  <th class="w30">&nbsp;</th>
+                  <th>Consignor Name</th>
+                  <th class="w120">Stock</th>
+                </tr>
+              </table>
+            </div>
+            <div class="table-container">
+              <div class="table-body">
+                <table *ngFor="let val of stock_data.consigner; let i = index" >
+                  <tr>
+                    <td class="w30">{{i+1}}</td>
+                    <td >{{val.name }}</td>
+                    <td class="w120">{{val.stock}}</td>
+                  </tr>
+                  
+                </table>
+              </div>
+            </div>
+          </div> 
+          
+          
+      
+          <div class="cs-table" *ngIf="part_data.mode == '2' ">
+              <div class="header" style="padding: 0px 15px;">
+                  <table>
+                      <tr >
+                          <th class="w30">&nbsp;</th>
+                          <th class="w150">Consignor</th>
+                          
+                          <th class="padding0">
+                              <table>
+                                  <tr>
+                                      <th class="w180">Consignee</th>
+                                      <th class="w100">Stock</th>
+                                  </tr>
+                              </table>
+                          </th>
+                          <th class="w100">Stock</th>
+                      </tr>
+                  </table>
+              </div>
+              <div class="table-container">
+                  <div class="table-body">
+                      <table>
+                          <tr *ngFor="let c of stock_data.consigner; let i = index" >
+                              <td class="w30">{{ i + 1 }}</td>
+                              <td class="w150">{{c.name}}</td>
+                              
+                                <td class="in-table">
+                                  <table>
+                                      <tr *ngFor="let ce of c.consignee; let i = index" >
+                                          <td class="w180">{{ ce.consignee_name }}</td>
+                                          <td class="w100">{{ce.stock}}</td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                  <td class="w100">{{c.stock}}</td>
+                              </tr>
+                      </table>
+                  </div>
+              </div>
+          </div> 
+          
+          
+          
+        </div>
+      </mat-dialog-content>
+      
+      <!-- ACTIONS BUTTONS -->
+      
+      <!-- <mat-dialog-actions align="end">
+        <div class="cs-btn fixedd pr10">
+          <div class="in-btn">
+            <button type="submit" mat-raised-button color="warn">Ok</button>
+          </div>
+        </div>
+      </mat-dialog-actions> -->
+</div>

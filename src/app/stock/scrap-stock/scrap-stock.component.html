@@ -1,0 +1,93 @@
+<div class="main-container">
+    <div class="master-heading bcspace">
+        <div class="back-btn">
+            <a mat-button (click)="db.goBack()" ><i class="material-icons">arrow_right_alt</i></a>
+        </div>
+        <div class="top-search wp30 ml30">
+            <input type="text" placeholder="SEARCH. . ." [(ngModel)]="search"  (keyup.enter)="getProductList()">
+            <i class="material-icons">search</i>
+        </div>
+        
+        <div class="top-pagination m-right-data">
+            <ul>
+                <li><p>Pages {{ current_page }} of {{ last_page }}</p></li>
+                <li><button mat-button class="left-btn" (click) = 'redirect_previous()'><i class="material-icons">keyboard_arrow_left</i></button></li>
+                <li><input type="text" placeholder="GO TO" [(ngModel)]="current_page"  (keyup.enter)="getProductList()"></li>
+                <li><button mat-button class="right-btn" (click) = 'redirect_next()'><i class="material-icons">keyboard_arrow_right</i></button></li>
+            </ul>
+        </div>
+        
+            
+        </div>
+        <div class="cs-container">
+            <div class="cs-row cs-tabs-space">
+                <app-stock-tab></app-stock-tab>
+                <div class="right-data tabs-listing">
+                    <div class="cs-spinner full-page" *ngIf = "loading_list">
+                        <div class="outer">
+                            <div class="innear">
+                                <mat-spinner></mat-spinner>
+                                <P>LOADING . . .</P>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cs-table mt15" *ngIf="products.length > 0" style="display: none;">
+                        <div class="header sticky-header">
+                            <table>
+                                <tr>
+                                    <th class="w30">&nbsp;</th>
+                                    <th class="w150">Equipment Id</th>
+                                    <th >Size</th>
+                                    <th class="w200">Description</th>
+                                    <th class="text-center w100">Scrap Stock</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-body">
+                                <table>
+                                    <tr *ngFor="let product of products; let i = index">
+                                        <td class="w30">{{ i + 1  }}</td>
+                                        <td class="w150">{{ product.part_number }}</td>
+                                        <td >{{ product.dimensions }}</td>
+                                        <td class="w200">{{ product.description }}</td>
+                                        <td class="text-center w100" >{{ product.scrap_stock }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                    
+                    
+                    <div class="cs-table mt15" *ngIf="products.length > 0">
+                        <div class="header sticky-header">
+                            <table>
+                                <tr>
+                                    <th class="w30">&nbsp;</th>
+                                    <th class="w150">Equipment Id</th>
+                                    <th >Size</th>
+                                    <th class="w200">Description</th>
+                                    <th class="w100 text-center">Scrap Stock</th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-body">
+                                <table>
+                                    <tr *ngFor="let product of products; let i = index">
+                                        <td class="w30">{{ i + 1  }}</td>
+                                        <td class="w150">{{ product.part_number }}</td>
+                                        <td >{{ product.dimensions }}</td>
+                                        <td class="w200">{{ product.description }}</td>
+                                        <td class="text-center w100" >{{ product.scrap_stock }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="h100"></div>

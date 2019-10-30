@@ -1,0 +1,91 @@
+<div class="main-container">
+  <div class="master-heading bcspace">
+    <div class="back-btn">
+      <a mat-button (click)="db.goBack()" ><i class="material-icons">arrow_right_alt</i></a>
+    </div>
+    <div class="vl-info">
+      <ul>
+        <li class="af-none"><p><span class="blue"> {{db.franchise_name}}</span> <i class="material-icons r-arrow">keyboard_arrow_right</i>  </p></li>
+        <li><p>total : <span>{{ total_consignee }}</span></p></li>        
+      
+      </ul>
+    </div>
+    <div class="top-search wp30 ml30">
+      <input type="text" placeholder="SEARCH Name or Mobile. . ." [(ngModel)]="filter.search"  (keyup.enter)="current_page = 1;getConsumers()">
+      <i class="material-icons">search</i>
+    </div>
+    
+    <div class="top-pagination m-right-data">
+      <ul>
+        <li><p>Pages {{ current_page }} of {{ last_page }}</p></li>
+        <li><button mat-button class="left-btn" (click) = 'redirect_previous()'><i class="material-icons">keyboard_arrow_left</i></button></li>
+        <li><input type="text" placeholder="GO TO" [(ngModel)]="current_page"  (keyup.enter)="getConsumers()"></li>
+        <li><button mat-button class="right-btn" (click) = 'redirect_next()'><i class="material-icons">keyboard_arrow_right</i></button></li>
+      </ul>
+    </div>
+  </div>
+  <div class="cs-container">
+    <div class="cs-row cs-tabs-space">
+      <!-- TABS Component -->
+      <app-consigner-left-tab *ngIf="db.datauser.consignor_id == 0 "></app-consigner-left-tab>
+      
+      <!-- TABS Component -->
+      <div class="right-data tabs-listing" [ngClass]="{'pl0' : db.datauser.consignor_id}">
+        <div class="cs-spinner full-page" *ngIf="loading_list">
+          <div class="outer">
+            <div class="innear">
+              <mat-spinner></mat-spinner>
+              <!-- <P>LOADING . . .</P> -->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="cs-table">
+            <div class="header sticky-header">
+                <app-header-tab></app-header-tab>
+                <table class="sno-border">
+                  <tr>
+                    <th class="w40">&nbsp;</th>
+                    <!-- <th class="w150">
+                      <div class="filter">
+                        <mat-form-field class="cs-input cs-date-picker">
+                          <input placeholder="Date" [(ngModel)]="filter.date" name="date" matInput (dateChange)="getConsumers()" [matDatepicker]="picker">
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </th> -->
+                    <!-- <th class="w150"> Created By  </th> -->
+                    <th class="w180"> Consignee  </th>
+                    <!-- <th class="w100">Total Stock </th> -->
+                    <!-- <th class="w100">InTransit  </th> -->
+                    <th class="w100">Ready for PickUp </th>
+                  </tr>
+                </table>
+              </div>
+              <div class="table-container">
+                <div class="table-body">
+                  <table class="sno-border">
+                    <tr *ngFor="let val of consumers; let i = index">
+                      <td class="w40 text-center">{{ ( (current_page - 1 ) * 20 ) + ( i+1 ) }}</td>
+                      <!-- <td class="w150"><ng-container *ngIf="val.created_date  != '0000-00-00 00:00:00' "> {{val.date_created | date: 'dd MMM yyyy'}} /  </ng-container> </td> -->
+                      <!-- <td class="w150">{{val.created_name}}</td> -->
+                      <td class="w180"><a mat-button class="link" routerLink="/consigner-detail/{{val.consigner_id}}" routerLinkActive="active">{{val.contact_name}}</a></td>
+                      <!-- <td class="w100"> {{val.fresh_stock}}</td> -->
+                      <!-- <td class="w100">
+                        <a mat-button class="link" (click)="openDialog( val.consigner_id , 1 )">{{ val.total_pending_qty }}</a>
+                      </td> -->
+                      <td class="w100">
+                          <a mat-button class="link" (click)="openDialog( val.consigner_id , 2)">{{ val.total_delivered_qty }}</a>
+                      </td>
+                    </tr>
+                  </table>
+              </div>
+            </div>
+          </div>   
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

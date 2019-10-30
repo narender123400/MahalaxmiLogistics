@@ -1,0 +1,150 @@
+<div class="main-container">
+    <div class="cs-spinner full-page" *ngIf = "!loading_page">
+      <div class="outer">
+        <div class="innear">
+          <mat-spinner></mat-spinner>
+          <P>LOADING . . .</P>
+        </div>
+      </div>
+    </div>
+    <div class="master-heading bcspace" *ngIf = "loading_page">
+        <div class="back-btn">
+          <a mat-button (click)="db.goBack()" ><i class="material-icons">arrow_right_alt</i></a>
+          </div>
+      <div class="vl-info">
+        <ul>
+          <li class="af-none"><p><span class="blue"> {{db.franchise_name}}</span> <i class="material-icons r-arrow">keyboard_arrow_right</i>  </p></li>
+          <!-- <li><p>total : <span>{{ total_consigners }}</span></p></li> -->
+        </ul>
+      </div>
+      <div class="top-search wp50 ml190">
+        <input type="text" placeholder="SEARCH. . ." [(ngModel)]="search"  (keyup.enter)="current_page = 1;getProductList()">
+        <i class="material-icons">search</i>
+      </div>
+      <div class="top-pagination m-right-data">
+        <ul>
+          <li><p>Pages {{ current_page }} of {{ last_page }}</p></li>
+          <li><button mat-button class="left-btn" (click) = 'redirect_previous()'><i class="material-icons">keyboard_arrow_left</i></button></li>
+          <li><input type="text" placeholder="GO TO" [(ngModel)]="current_page"  (keyup.enter)="getProductList()"></li>
+          <li><button mat-button class="right-btn" (click) = 'redirect_next()'><i class="material-icons">keyboard_arrow_right</i></button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="cs-container" *ngIf="loading_page">
+        <div class="cs-row cs-tabs-space">
+            <!-- TABS Component -->
+            <app-consignee-left-tab></app-consignee-left-tab>
+
+     
+            <!-- TABS Component -->
+            <div class="right-data tabs-listing">
+                <div class="cs-spinner half-page" *ngIf="!loading_list">
+                  <div class="outer">
+                    <div class="innear">
+                      <mat-spinner></mat-spinner>
+                      <P>LOADING . . .</P>
+                    </div>
+                  </div>
+                </div>
+  
+  
+  
+                <div class="data-not-available" *ngIf="loading_list && searchData && (products.length < 1)">
+                    <div class="outer">
+                      <div class="iinear">
+                        <div class="figure" matRipple>
+                          <div class="header">
+                            <img src="assets/img/data-not-available-header.svg" alt="">
+                          </div>
+    
+                          <div class="description">
+                            <div class="cs-heading">
+                              <h2>for Product</h2>
+                            </div>
+                            <div class="img">
+                              <i class="material-icons">error_outline</i>
+                            </div>
+                            <div class="psc">
+                              <p>data not available</p>
+                              <p>Tap on <a routerLink="/products/add" >ADD NEW</a> for for Product</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+  
+  
+                <div class="data-not-available" *ngIf="loading_list && !searchData && search">
+                    <div class="outer">
+                      <div class="iinear">
+                        <div class="figure" matRipple>
+                          <div class="header">
+                            <img src="assets/img/data-not-available-header.svg" alt="">
+                          </div>
+  
+                          <div class="description">
+                            <div class="cs-heading">
+                              <h2>{{ search }}</h2>
+                            </div>
+                            <div class="img">
+                              <i class="material-icons">search</i>
+                            </div>
+                            <div class="psc">
+                              <p>data not available</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="cs-table mt15" *ngIf="loading_list && (products.length > 0)">
+                      <div class="header sticky-header">
+                          <table>
+                              <tr>
+                                <th class="w30">&nbsp;</th>
+                                <th class="w150">Part Number</th>
+                                <th >Size</th>
+                                <th class="w100">Weight (KG)</th>
+                                <th class="w180">Volume Weight</th>
+                                <th class="w150">Stock Alert</th>
+                                <th class="w130 text-center">Consignee Stock</th>
+                                <th class="w130 text-center">Intransit Stock</th>
+
+                                <th class="text-center w200">Action</th>
+                              </tr>
+                          </table>
+                      </div>
+                      <div class="table-container">
+                          <div class="table-body">
+                              <table>
+                                  <tr *ngFor="let product of products; let i = index">
+                                    <td class="w30">{{ i + 1  }}</td>
+                                    <td class="w150">{{ product.part_number }}</td>
+                                    <td >{{ product.dimensions }}</td>
+                                    <td class="w100">{{ product.weight }}</td>
+                                    <td class="w180">{{ product.volume_weight }}</td>
+                                    <td class="w150">{{ product.stock_alert }}</td>
+                                    <td class="w130 text-center">{{ product.total_fresh_stock }}</td>
+                                    <td class="w130 text-center">{{ product.intransit_qty }}</td>
+  
+                                    <td class="text-center w200">
+                                        <!-- {{val.product_id}}/{{val.id}} -->
+                                    <!-- <a mat-button  class="link"  (click)="val.updated_at = ''; add(1) " *ngIf="val.updated_at ">Add Qty</a> -->
+                                    <a mat-button  class="link"  (click)="product.updated_at = '1'; add(0) " *ngIf="product.updated_at == '' ">Cancel</a>
+                                    <a mat-button  routerLink="/consignee-transaction/{{product.master_parts_stock_id}}/{{franchise_id}}" routerLinkActive="active"  class="link">Transaction</a>
+                                  </td>
+                            
+                              
+                                  </tr>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+        </div>
+    </div>
+  </div>
+  
+  <div class="h100"></div>
+  

@@ -1,0 +1,121 @@
+<div class="main-container">
+  <div class="master-heading bcspace">
+    <div class="back-btn">
+      <a mat-button (click)="db.goBack()" ><i class="material-icons">arrow_right_alt</i></a>
+    </div>
+    <div class="vl-info">
+      <ul>
+        <li class="af-none"><p><span class="blue"> {{db.franchise_name}}</span> <i class="material-icons r-arrow">keyboard_arrow_right</i>  </p></li>
+      </ul>
+    </div>
+    <div class="vl-info">
+      <ul>
+          <li><p class="light" (click)="salesOrderList()" style="cursor:pointer;">Total Agreement : <span class="black-clr">{{totalorder}}</span></p></li>
+          <li><p class="light" (click)="salesOrderList('Active')" style="cursor:pointer;">Active Agreement : <span class="red-clr">{{approved_order}}</span></p></li>
+          <li><p class="light" (click)="salesOrderList('Expired')" style="cursor:pointer;" > Expired Agreement : <span class="red-clr">{{pendingorder}}</span></p></li>
+      </ul>
+  </div>
+  <div class="top-search wp30 ml30">    
+      <input type="text" placeholder="SEARCH. . ." [(ngModel)]="filter.search"  (keyup.enter)="current_page = 1;salesOrderList()">
+      <i class="material-icons">search</i>
+  </div>
+
+      <div class="top-pagination m-right-data">
+        <ul>
+            <li><p>Pages {{ current_page }} of {{ last_page }}</p></li>
+            <li><button mat-button class="left-btn" (click) = 'redirect_previous()'><i class="material-icons">keyboard_arrow_left</i></button></li>
+            <li><input type="text" placeholder="GO TO"  [(ngModel)]="current_page"  (keyup.enter)="salesOrderList()"></li>
+            <li><button mat-button class="right-btn"  (click) = 'redirect_next()'><i class="material-icons">keyboard_arrow_right</i></button></li>
+        </ul>
+    </div>
+  </div>
+  <div class="cs-container">
+    <div class="cs-row cs-tabs-space">
+      <!-- TABS Component -->
+      <app-branch-left-tab *ngIf="db.datauser.branch_id == 0 "></app-branch-left-tab>
+     
+      <!-- TABS Component -->
+      <div class="right-data tabs-listing" [ngClass]="{'pl0' : db.datauser.branch_id}">
+          <div class="cs-spinner full-page" *ngIf="loading_list">
+              <div class="outer">
+                <div class="innear">
+                  <mat-spinner></mat-spinner>
+                  <!-- <P>LOADING . . .</P> -->
+                </div>
+              </div>
+            </div>
+          <div class="row">
+            <div class="cs-table">
+              <div class="header sticky-header">
+                <table>
+                  <tr>
+                    <th class="w30 border-right-none"></th>
+                    <th class="w160">
+                        <div class="filter">
+                    
+                                <mat-form-field class="cs-input cs-date-picker">
+                                <input placeholder="Date/Created By" [(ngModel)]="filter.date" name="date" matInput (dateChange)="salesOrderList()" [matDatepicker]="picker" >
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                    </th>
+                    <th class="w150">Consignor </th>
+                    <th class="w130 text-center">Agreement No. </th>
+                    <th class="w100 text-center">Start Date</th>
+                    <th class="w100 text-center">End Date</th>
+                    <th class="w50 text-center">Total Item</th>
+                    <th class="w50 text-center">Item Qty</th>
+                    <th class="w60 text-right">Rental Price</th>
+                    <th class="w140 text-center">Payment Term</th>
+                    <th class="w90">
+                        <div class="filter">
+                            <mat-form-field class="w80">
+                                <mat-select placeholder="Status">
+                                    <mat-option value="option0" (click)="salesOrderList()">All</mat-option>
+                                    <mat-option value="option1" (click)="salesOrderList('Active')">Active</mat-option>
+                                    <mat-option value="option2" (click)="salesOrderList('Expired')">Expired</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </th>
+                    
+                  </tr>
+              </table>
+              </div>
+              <div class="table-container">
+                <div class="table-body">
+                  <table>
+                    <tr *ngFor="let row of orderList;let i = index">
+                      <td class="w30 text-center">{{ ( (current_page - 1 ) * 20 ) + ( i+1 ) }}</td>
+                      <td class="w160">{{row.date_created}}/ {{row.created_name}}</td>
+                      <td class="w150">
+                      <a mat-button class="link" routerLink="/consigner-detail/{{row.consigner_id}}" routerLinkActive="active">{{row.name}}</a>
+                      </td>
+                      <td class="w130 text-center">
+                        <a mat-button class="link" routerLink="/sale-order-detail/{{row.id}}" routerLinkActive="active">{{row.invoice_id}}</a>
+                     </td>
+                      <td class="w100 text-center">{{row.start_date | date: 'dd MMM yyyy' }}</td>
+                      <td class="w100 text-center">{{row.end_date | date: 'dd MMM yyyy' }}</td>
+                      <td class="w50 text-center">{{row.totalItem}}</td>
+                      <td class="w50 text-center">{{row.totalQty}}</td>
+                      <td class="w60 text-right">{{row.rental_price}}</td>
+                      <td class="w140 text-center">{{row.payment_term}}</td>
+                      <td class="w90 ft-wt yellow-clr">
+                            {{row.order_status}} 
+                            <div class="action-btns">
+                                <a mat-button class="view" routerLink="/sale-order-detail/{{row.id}}" routerLinkActive="active"><i class="material-icons">remove_red_eye</i> View</a>
+                            </div>     
+                        </td>
+                    </tr>
+                </table>
+                </div>
+              </div>
+            </div>   
+          </div>
+
+      </div>
+    </div>
+  </div>
+</div>

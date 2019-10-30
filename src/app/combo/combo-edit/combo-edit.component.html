@@ -1,0 +1,234 @@
+<div class="main-container">
+    <div class="master-heading">
+        <div class="heading">
+            <h1>MASTER's</h1>
+        </div>
+    </div>
+    <div class="cs-container">
+        <div class="cs-row cs-tabs-space">
+            <!-- TABS Component -->
+            <!-- <app-stock-tab></app-stock-tab> -->
+            <app-master-add-tabs></app-master-add-tabs>
+            
+            <!-- TABS Component -->
+            
+            <div class="right-data">
+                <div class="cs-spinner full-page" *ngIf = "loading_list">
+                    <div class="outer">
+                        <div class="innear">
+                            <mat-spinner></mat-spinner>
+                            <P>LOADING . . .</P>
+                        </div>
+                    </div>
+                </div>
+                
+                <form name="stockForm"  #f="ngForm" novalidate>
+                    
+                    <div class="contst">
+                        
+                        <div class="cs-heading">
+                            <h2>Update Combo</h2>
+                        </div>
+                        
+                        <div class="form-field">
+                            <div class="row">
+                                <div class="control-field col-6">
+                                    <mat-form-field class="cs-multi-select">
+                                        <mat-select placeholder="Category" [(ngModel)] = "finish_good.category" #category="ngModel" name="category" required>
+                                            <mat-option value = "PP Foldable Box" >PP Foldable Box</mat-option>
+                                            <mat-option value = "PPIN" >PPIN</mat-option>
+                                            <mat-option value = "PP BOX" >PP BOX</mat-option>
+                                            <mat-option value = "FLC-128" >FLC-128</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                
+                                <div class="control-field col-6">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Combo Name" [(ngModel)]="finish_good.combo_name"  name="combo_name" #combo_name="ngModel" required >
+                                    </mat-form-field>
+                                    
+                                    
+                                    
+                                </div>
+                                
+                                <div class="control-field col-6">
+                                    <mat-form-field class="example-full-width cs-input"> 
+                                        <input matInput placeholder="Description" [(ngModel)]="finish_good.desc" name="desc" #desc="ngModel"  class="h123"  >
+                                    </mat-form-field>
+                                    
+                                </div>
+                                
+                                <div class="control-field col-6">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Price" [(ngModel)]="finish_good.price" type="number" name="price" #price="ngModel" required >
+                                    </mat-form-field>
+                                    
+                                </div>
+                                
+                                <div class="control-field col-6">
+                                    <mat-form-field class="example-full-width cs-input"> 
+                                        <input matInput placeholder="Alias" [(ngModel)]="finish_good.alias" name="alias" #alias="ngModel"  >
+                                    </mat-form-field>
+                                    
+                                </div>
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form name="invoiceForm" (ngSubmit)="m.form.valid && addRawMatrialList(m)" #m="ngForm" novalidate>
+                    
+                    <div class="contst mt20 mb5">
+                        
+                        <div class="cs-heading">
+                            <h2>Add Parts to Cart</h2>
+                        </div>
+                        
+                        <div class="form-field">
+                            <div class="row">
+                                <div class="control-field col-3">
+                                    
+                                    
+                                    <div class="ng-autocomplete wp100 mt12">
+                                        <label>Equipment Id*</label>
+                                        <ng-autocomplete 
+                                        [data]="productList"
+                                        [searchKeyword]="keyword"
+                                        (selected)='selectEvent($event)'
+                                        (inputChanged)='onChangeSearch($event)'
+                                        (inputFocused)='onFocused($event)'
+                                        [itemTemplate]="itemTemplate"
+                                        [notFoundTemplate]="notFoundTemplate">                                 
+                                    </ng-autocomplete>
+                                    
+                                    <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.part_number"></a>
+                                    </ng-template>
+                                    
+                                    <ng-template #notFoundTemplate let-notFound>
+                                        <div [innerHTML]="notFound"></div>
+                                    </ng-template>
+                                </div>
+                                
+                                
+                                
+                                <!-- <mat-form-field class="cs-multi-select">
+                                    <mat-select placeholder="Part Number" name="part_number" [(ngModel)]="raw_material.part_number" (selectionChange)="getDetail()" #part_number="ngModel" required [disabled]="f.form.invalid ? true : false">
+                                        
+                                        <mat-option *ngFor="let row of productList; let b = index" [value]="row.part_number">
+                                            <small>{{row.part_number}}</small>
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            -->
+                        </div>
+                        
+                        
+                        <div class="control-field col-3">
+                            <mat-form-field class="example-full-width cs-input">
+                                <input matInput placeholder="Qty" [(ngModel)]="raw_material.qty" (input)="GetAmount(raw_material.qty,raw_material.price)"   name="qty" #qty="ngModel" >
+                            </mat-form-field>
+                            
+                        </div>
+                        
+                        
+                        <div class="control-field col-1 pr50">
+                            
+                            <div class="plus-btn">
+                                <button type="submit" mat-raised-button color="warn" class="mt2" [disabled]="f.form.invalid ? true : false">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        
+        <div class="cs-table" >
+            <div class="header">
+                <table>
+                    <tr>
+                        <th class="w160">Equipment Id</th>
+                        <th class="w190">Size</th>
+                        <th class="w100">Weight</th>
+                        <th class="w110">Volume Weight</th>
+                        <th class="w90 text-right">Purchase Price</th>
+                        <th class="w80 text-center">Qty</th>
+                        <th class="w100 text-right">Amount</th>
+                        <th >Description</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="table-container">
+                <div class="table-body">
+                    <table>
+                        <tr *ngFor="let raw of rawMatrialList; let p = index">
+                            <td class="w160">{{ raw.part_number }}</td>
+                            <td class="w190">{{ raw.dimensions }}</td>
+                            <td class="w100">{{ raw.weight }}</td>
+                            <td class="w110">{{ raw.volume_weight }}</td>
+                            <td class="w90 text-right">&#x20B9; {{ raw.price }}</td>
+                            <td class="w80 text-center">{{ raw.qty }}</td>
+                            <td class="w100 text-right">&#x20B9; {{ raw.amount }}</td>
+                            <td>{{ raw.description }}
+                                <div class="action-btns">
+                                    <div class="outer">
+                                        <div class="innear">
+                                            <a (click)="remove(p,raw.id,raw.combo_id,raw.qty)" mat-button class="delete"><i class="material-icons">delete_sweep</i> Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td>Brand 2</td>
+                            <td>Product 2</td>
+                            <td class="text-center">25 ml</td>
+                            <td class="text-center">25 </td>
+                        </tr> -->
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <div class="row" *ngIf="rawMatrialList.length">
+            <div class="col-8 empty"></div>
+            <div class="col-4">
+                <div class="invoice-details" style="padding: 15px 30px 15px 15px;">
+                    <table class="invoice-table">                           
+                        <tr>
+                            <td class="w200 td">Total Price	</td>
+                            <td class="td">&#8377; {{ finish_good.total_price}}</td>
+                        </tr>  
+                        <tr>
+                            <td class="w200 td">Total Qty	</td>
+                            <td class="td">&#8377; {{ finish_good.total_qty}}</td>
+                        </tr>  
+                        <tr>
+                            <td class="w200 td">Total Amount	</td>
+                            <td class="td">&#8377; {{ finish_good.total_amount}}</td>
+                        </tr>                            
+                    </table>
+                </div>
+            </div>
+        </div> -->
+        
+        <div class="cs-btn fixedd mt32 text-right" [ngClass]="{loading: savingData}" *ngIf="rawMatrialList.length > 0">
+            <div class="in-btn">
+                <button mat-raised-button color="warn" [attr.disabled]="(f.form.invalid ? true : false ) && savingData" (click)="f.form.valid && updateRawProductList()">save</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<div class="h100"></div>

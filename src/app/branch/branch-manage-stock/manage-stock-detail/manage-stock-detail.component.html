@@ -1,0 +1,146 @@
+<div class="main-container">
+    <div class="master-heading bcspace">
+        <div class="back-btn">
+            <a mat-button (click)="db.goBack()"><i class="material-icons">arrow_right_alt</i></a>
+        </div>
+        <div class="vl-info">
+            <ul>  
+                <li><p><span class="blue">#Manage Id :</span> <span class="blue"> {{manage.id}}</span></p></li>
+            </ul>
+        </div>
+        
+        
+    </div>
+    
+    <div class="cs-spinner full-page" *ngIf = "!loading_list">
+        <div class="outer">
+            <div class="innear">
+                <mat-spinner></mat-spinner>
+                <P>LOADING . . .</P>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cs-container detail">
+        <div class="row">
+            <div class="col-8">
+                <div class="right-data pl0">
+                    
+                    <div class="contst">
+                        <div class="cs-heading">
+                            <h2>{{manage.created_name}}</h2>
+                            <p><i class="material-icons ic-watch">watch_later</i>{{manage.date_created | date: 'dd MMM yyyy'}}</p>
+                        </div>
+                        <div class="cs-divider pt10">
+                            <mat-divider></mat-divider>
+                        </div>
+                        
+                        <div class="form-field">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="control-field col-12">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Created By" readonly="" value="{{manage.created_name}}">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="control-field col-12">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Total Fresh Stock" readonly="" value="{{manage.fresh_stock}}">
+                                            
+                                            
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                        <div class="control-field col-12">
+                                            <mat-form-field class="example-full-width cs-input">
+                                                <input matInput placeholder="Stock Type" readonly="" value="{{manage.stock_type}}">                                               
+                                                
+                                            </mat-form-field>
+                                        </div>
+                                </div>
+                                <div class="col-4">
+                                      <div class="control-field col-12">
+                                          <mat-form-field class="example-full-width cs-input">
+                                              <input matInput placeholder="Total Maintenance Stock" readonly="" value="{{manage.maintenance_stock}}">
+                                              
+                                              
+                                          </mat-form-field>
+                                      </div>
+                                  </div>
+                                  <div class="col-4">
+                                          <div class="control-field col-12">
+                                              <mat-form-field class="example-full-width cs-input">
+                                                  <input matInput placeholder="Total Scrap Srock" readonly="" value="{{manage.scrap_stock}}">
+                                                  
+                                                  
+                                              </mat-form-field>
+                                          </div>
+                                      </div>
+                            </div>
+                            <div class="cs-divider pt20 left-right-15">
+                                <mat-divider></mat-divider>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div class="col-4">
+                <div class="right-data pl20">
+                    <div class="contst summary">
+                        <div class="cs-heading">
+                            <h2>TRANSFER LOGS</h2>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="cs-heading mt20 mb10">
+                    <h2>ITEM DETAIL</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="cs-table left-right-15">
+                    <div class="header">
+                        <table>
+                              <tr >
+                                      <th class="w40">&nbsp;</th>
+                                      <th class="w170">Equipment Id</th>
+                                      <th class="w170">Size</th>
+                                      <th class="w170">Volume Weight</th>
+                                      <th class="w170" *ngIf="manage.stock_type=='fresh'"> From Fresh Stock</th>
+                                      <th class="w170" *ngIf="manage.stock_type=='maintenance'">Fresh Stock</th>
+                                      <th class="w170" *ngIf="manage.stock_type=='fresh'">Maintenance Stock</th>
+                                      <th class="w170" *ngIf="manage.stock_type=='maintenance'"> From Maintenance Stock</th>
+                                      <th class="w170">Scrap Stock</th>
+                                  </tr>
+                        </table>
+                    </div>
+                    <div class="table-container">
+                        <div class="table-body">
+                            <table>
+                                  <tr *ngFor="let p of manage_item; let i = index">
+                                          <td class="w40">{{i+1}}</td>
+                                          <td class="w170">{{p.part_number}}</td>
+                                          <td class="w170">{{p.size}}</td>
+                                          <td class="w170">{{p.volume_weight}}</td>
+                                          <td class="w170">{{p.fresh_stock}}</td>
+                                          <td class="w170">{{p.maintenance_stock}}</td>
+                                          <td class="w170">{{p.scrap_stock}}</td>
+                                      </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+  <div class="h100"></div>

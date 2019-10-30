@@ -1,0 +1,248 @@
+<div class="main-container">
+	<div class="master-heading bcspace">
+		<div class="back-btn">
+			<a mat-button (click)="db.goBack()" ><i class="material-icons">arrow_right_alt</i></a>
+		</div>
+		<div class="vl-info">
+			<ul>
+				<li><p><span>{{db.franchise_name}}</span></p></li>
+				<!-- <li><p class="light">Customers : <span style="color: #000;">25</span></p></li> -->
+				<!-- <li class="af-none"><p class="light">Orders : <span style="color: #000;">35/<strong style="color: #ED3237;">12</strong></span></p></li> -->
+				<li class="af-none" *ngIf="db.datauser.consignor_id == '0'"><a mat-button  color="warn" class="edit-page"   (click)="edit()"><i class="material-icons"  >create</i></a></li>
+				
+			</ul>
+		</div>
+		
+		
+	</div>
+	<div class="cs-container">
+		<div class="cs-row cs-tabs-space">
+			<!-- TABS Component -->
+			<app-consigner-left-tab *ngIf="db.datauser.consignor_id == 0 "></app-consigner-left-tab>
+			
+			<!-- TABS Component -->
+			<!-- pl0 -->
+			<div class="right-data " [ngClass]="{'pl0' : db.datauser.consignor_id}">
+				<div class="cs-spinner full-page" *ngIf="loading_list">
+					<div class="outer">
+						<div class="innear">
+							<mat-spinner></mat-spinner>
+							<!-- <P>LOADING . . .</P> -->
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="row">
+					
+					<div class="col-8"> 
+						<div class="contst">
+							<div class="cs-heading">
+								<h2>COMPANY DETAIL</h2>
+							</div>
+							
+							<div class="side-by-side mt10" style="display: inherit;">
+								<div class="row mr0">
+									<div class="figure grid-two">
+										<p>Company Name</p>
+										<p>{{getData.name}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Email</p>
+										<p>{{getData.con_email}}</p>
+									</div>
+									<!-- <div class="figure grid-two">
+										<p>Landline No.</p>
+										<p>{{getData.landline_no}}</p>
+									</div> -->
+									<div class="figure grid-two">
+										<p>Mobile No.</p>
+										<p>{{getData.mobile}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Pan no</p>
+										<p>{{getData.pan_no}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>GST</p>
+										<p>{{getData.gstin}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Branch Name</p>
+										<p>{{getData.branch_name}}</p>
+									</div>
+								</div>
+							</div>
+							
+							<div class="cs-heading mt20">
+								<h2>CUSTOMER DETAIL</h2>
+							</div>
+							
+							<div class="side-by-side mt10" style="display: inherit;">
+								<div class="row mr0">
+									<div class="figure grid-three">
+										<p>Name</p>
+										<p>{{getData.contact_name}}</p>
+									</div>
+									<div class="figure grid-three">
+										<p>Email</p>
+										<p>{{getData.contact_email}}</p>
+									</div>
+									<div class="figure grid-three">
+										<p>Mobile No.</p>
+										<p>{{getData.contact_no}}</p>
+									</div>
+								</div>
+							</div>
+							
+							
+							<div class="cs-heading mt20">
+								<h2>ADDRESS INFO</h2>
+							</div>
+							
+							<div class="side-by-side mt10" style="display: inherit;">
+								<div class="row mr0">
+									<div class="figure grid-two">
+										<p>Country</p>
+										<p>{{getData.country_name}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>State</p>
+										<p>{{getData.state}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>District</p>
+										<p>{{getData.district}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>City</p>
+										<p>{{getData.city}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Pincode</p>
+										<p>{{getData.pincode}}</p>
+									</div>
+									<div class="figure grid-two">
+										<p>Address</p>
+										<p>{{getData.address}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-4">
+						<div class="top-tabs">
+							<button class="left" (click)="mode = '1'; "  [ngClass]="{'active': mode == '1' }" >Log's</button>
+							<button class="right" (click)="mode = '2'; "  [ngClass]="{'active': mode == '2' }" >Dealing</button>
+						</div>
+						<div class="sticky-relative">
+							<div class="stickylogs">
+								<div class="contst left-calls-info ml0 " >
+									
+									<div class="modeone" *ngIf="mode == '1' ">
+										<div class="head">
+											<p class="date">{{ val.created_at | date: 'dd MMM yyyy' }}</p>
+										</div>
+										<div class="description">
+											<p><strong>{{ val.follow_type }}:</strong>&nbsp;{{ val.description }}</p>
+											<p *ngIf="val.next_follow_type!='' ">Next Followup Type:&nbsp;{{ val.next_follow_type }}</p>
+											<p *ngIf="val.next_follow_date!='' && val.next_follow_type!='' ">Next Followup Date:&nbsp;{{ val.next_follow_date | date: 'dd MMM yyyy' }}</p>
+										</div>
+									</div>
+									
+									<div class=" mode-two" *ngIf="mode == '2' ">
+										<div class="head"  *ngIf="vendor_redeal.length && test == '0'" >
+											<div class="csn-heading " [ngClass]="{'active':active.user==true}">
+												<h2>DEALING WITH</h2>
+												<button class="search-icon" (click)="toggleterritory('user','open')" >
+													<i class="material-icons">search</i>
+												</button>
+												
+												<div class="search blue-bg">
+													<i class="material-icons sc-icon">search</i>
+													<input style="width: 100% !important;" *ngIf="current_deal" type="text" placeholder="search..."  (input)="getPartCheckin('mode1',search2.search3)" #search1="ngModel" [(ngModel)]="search2.search3">
+													<button (click)="toggleterritory('user','close')">
+														<i class="material-icons">clear</i>
+													</button>
+												</div>
+											</div>
+											
+										</div>
+										<ul *ngIf="current_deal" >
+											<li *ngFor="let deals of vendor_deal; let y = index">
+												<div class="head">
+													<div class="txt-box">
+														<p>
+															<span class="cs-head">Equipment Id </span>
+															{{deals.part_number}}
+														</p>
+														
+														<p><span class="cs-head">Size </span>{{deals.dimensions}}</p>
+														<p><span class="cs-head">Description </span>{{deals.description}}</p>
+													</div>
+													<p class="date">
+														<a mat-button class="font12" ></a><i class="material-icons" (click)="update_vendor_deal_remove(deals.id)">
+															delete_sweep
+														</i>
+													</p>
+												</div>
+											</li>
+										</ul>
+										
+										<div class="cs-heading">
+											<a mat-raised-button color="warn" (click)="remainingdeals()" class="font13" style="margin-top: -10px; color: #fff;" *ngIf="vendor_redeal.length && test == '0'" >Add New Product</a>
+										</div> 
+										
+										<!-- Add product Data -->
+										<div class="convert-franchies-modle" *ngIf="remaining_deal" style="min-width: 100%;">
+											
+											<div class="head stickyhead" >
+												<div class="csn-heading mt0" [ngClass]="{'active':active.user==true}">
+													<h2>DEALING WITH</h2>
+													<button class="search-icon" *ngIf="test == '1'" (click)="clear()" >
+														<i class="material-icons red-clr">clear</i>
+													</button>
+												</div>
+												<input type="text" placeholder="search..."  (input)="getPartCheckin('mode2',search2.search1)" #search1="ngModel" [(ngModel)]="search2.search1" class="serchinput">
+											</div>
+											<div class="m-body product-scroll" >
+												<div class="row">
+													<div class="col-12 plan-list step1 shadow-none" style="background: transparent; height: inherit;">
+														<div class="listing"> 
+															<ul class="checkbox-list pr15" style="max-height: inherit;">
+																<li class="pt15" *ngFor="let productss of vendor_redeal; let z=index" >
+																	<label>
+																		<div class="txt-box">
+																			<p>
+																				<span class="cs-head">Equipment Id </span>
+																				{{productss.part_number}}
+																			</p>
+																			
+																			<p><span class="cs-head">Size </span>{{productss.dimensions}}</p>
+																			<p><span class="cs-head">Description </span>{{productss.description}}</p>
+																		</div>
+																		<mat-checkbox class="cs-check" value={{productss.pro_id}} (change)="update_vendor_deal_add(productss.id,productss.part_number)"
+																		name = "deal_pro_id"
+																		style="width:5%;display: inline-block;"></mat-checkbox>
+																	</label>
+																</li> 
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="h100"></div>
+	</div>
+</div>
+
+<div class="h100"></div>

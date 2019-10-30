@@ -1,0 +1,974 @@
+<div class="main-container">
+    <div *ngIf="loading_list && parent.id" class="master-heading bcspace">
+        <div class="back-btn">
+            <a mat-button (click)="db.goBack()"><i class="material-icons">arrow_right_alt</i></a>
+        </div>
+        <div class="vl-info">
+            <ul>  
+                <li><p><span>Challan No. :</span> <span class="blue"> {{child.invoice_id}}</span></p></li>
+                <li><p class="light">Created By : <span class="yellow-clr"> {{child.first_name}}</span></p></li>
+                <li><p class="light">Challan Date : <span class="yellow-clr"> {{child.date_created | date: 'dd MMM yyyy'}}</span></p></li>
+                <li class="af-none">
+                    <p class="light"> 
+                        QTY: 
+                        <span class="green-clr">{{parent.total_item}}</span>
+                    </p>
+                </li>                
+                <li><p class="light">Challan Status : <span [ngClass]="{'yellow-clr' : child.status == 'Pending' , 'green-clr' : child.status == 'Received', 'red-clr' : child.status == 'Cancel' } "> {{child.status}}</span></p></li>
+            </ul>
+        </div>
+        
+        <!-- <div class="m-right-data vl-info" *ngIf="!db.datauser.franchise_id">
+            <ul>                
+                <li class="af-none">
+                    <button class="ac-btn link" mat-button [matMenuTriggerFor]="menu">
+                        Action
+                        <i class="material-icons icon black-clr " style="right: 0px;left: inherit;">arrow_drop_down</i>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item  *ngIf="parent.order_status == 'Active' && parent.end_date >= parent.now_data && parent.start_date <= parent.now_data "  routerLink="/sale-order-deliver/{{parent.id}}" routerLinkActive="active">Create Invoice</button>
+                    </mat-menu>
+                </li>
+            </ul>
+        </div> -->
+    </div>
+    
+    <div class="cs-spinner full-page" *ngIf = "!loading_list">
+        <div class="outer">
+            <div class="innear">
+                <mat-spinner></mat-spinner>
+                <P>LOADING . . .</P>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="loading_list && parent.id" class="cs-container detail">
+        <div class="row">
+            <div class="col-6">
+                <div class="right-data pl0">
+                    <div class="contst">
+                        <div class="cs-heading">
+                            <h2>{{parent.name}}</h2>
+                            <p><i class="material-icons ic-watch">watch_later</i>{{parent.date_created | date: 'dd MMM yyyy'}}</p>
+                        </div>
+                        <div class="cs-divider pt10">
+                            <mat-divider></mat-divider>
+                        </div>
+                        
+                        <div class="form-field">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="control-field col-6 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Branch Name" readonly="" [value]="parent.branch_name">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="control-field col-6 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Consignor Name" readonly="" [value]="parent.name">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="control-field col-6 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Contact No" readonly="" [value]="parent.contact_no">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="control-field col-6 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Email" readonly="" [value]="parent.contact_email">
+                                            
+                                        </mat-form-field>
+                                    </div>
+                                    
+                                    <div class="control-field col-6 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="PO No." readonly="" [value]="parent.p_o_n">
+                                            
+                                        </mat-form-field>
+                                    </div> 
+                                    <div class="control-field col-6 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="Customer Part No." readonly="" [value]="parent.customer_part_number">
+                                            
+                                        </mat-form-field>
+                                    </div>
+                                    
+                                    <div class="control-field col-6 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <input matInput placeholder="HSN Code" readonly="" [value]="parent.hsn">
+                                            
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="control-field col-12 mt10">
+                                        <mat-form-field class="example-full-width cs-input">
+                                            <textarea matInput placeholder="ADDRESS" readonly="" class="h125" value="{{parent.city}} {{parent.district}} {{parent.state}} {{parent.pincode}}"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="right-data pl0">
+                    <div class="contst">
+                        <div class="cs-heading">
+                            <h2>Transport Information</h2>
+                        </div>
+                        <div class="cs-divider pt10">
+                            <mat-divider></mat-divider>
+                        </div>
+                        
+                        <div class="form-field pt10">
+                            <div class="row">
+                                <div class="control-field col-4 mt10">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Vehicle Type" readonly [(ngModel)]="parent.ve_type">
+                                    </mat-form-field>
+                                </div>
+                                <div class="control-field col-4 mt10">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Vehicle No." readonly [(ngModel)]="parent.ve_no">
+                                    </mat-form-field>
+                                </div>
+                                <div class="control-field col-4 mt10">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Vehicle Freight" readonly [(ngModel)]="parent.ve_freight">
+                                    </mat-form-field>
+                                </div>
+                                <div class="control-field col-4 mt10">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Driver Name" readonly [(ngModel)]="parent.ve_driver_name">
+                                    </mat-form-field>
+                                </div>
+                                <div class="control-field col-4 mt10">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder=" Driver Mobile No." readonly [(ngModel)]="parent.ve_mobile_no">
+                                    </mat-form-field>
+                                </div>
+                                <div class="control-field col-4 mt10">
+                                    <mat-form-field class="example-full-width cs-input">
+                                        <input matInput placeholder="Name Of Transport" readonly  [(ngModel)]="parent.ve_transport">
+                                    </mat-form-field>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12">
+            <div class="cs-heading mt20 mb10">
+                <h2>CHALLAN ITEM DETAILS</h2>
+            </div>
+            
+            <div class="cs-table left-right-15">
+                <div class="header">
+                    <table>
+                        <tr>
+                            <td class="w30 text-center">S No.</td>
+                            <th class="w60">Item Type</th>
+                            <th class="w200 padding0">
+                                <table>
+                                    <tr>
+                                        <th>Equipment Id</th>
+                                        <th>Size</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </table>
+                            </th>
+                            <th class="w15 text-center">Qty</th>
+                            <th class="w20 text-right">Rent</th>
+                            <th class="w25 text-right">Total Rent</th>
+                            <!-- <th class="w30 text-right">Damage Cost</th> -->
+                            
+                        </tr>
+                    </table>
+                    
+                    
+                </div>
+                <div class="table-container">
+                    <div class="table-body">
+                        
+                        <table>
+                            <tr *ngFor="let c of sub_child; let i = index">
+                                <td class="w30 text-center">{{i+1}}</td>
+                                <td class="w60">
+                                    <div class="edit"><strong>{{c.type}}</strong><p *ngIf="c.type == 'Combo' ">{{c.part_number}}</p></div>
+                                </td>
+                                <ng-container  *ngIf="c.type == 'Combo' ">
+                                    <td class="w200 padding0">
+                                        <table class="small-font">
+                                            <tr *ngFor="let part of c.combo_list; let i = index">
+                                                <td>{{part.part_number}} <span>({{part.qty}}) </span></td>
+                                                <td>{{part.dimensions}}</td>
+                                                <td>{{part.description}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </ng-container>
+                                
+                                <ng-container  *ngIf="c.type == 'Part' ">
+                                    <td class="w200 padding0">
+                                        <table class="small-font">
+                                            <tr>
+                                                <td>{{c.part_number}}</td>
+                                                <td>{{c.dimensions}}</td>
+                                                <td>{{c.description}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </ng-container>
+                                <td class="w15 text-center">{{ c.qty }}</td>
+                                <td class="w20 text-right">&#8377; {{ c.rental_price  }}</td>
+                                <td class="w25 text-right">&#8377; {{ c.deliver_rantal   }}</td>
+                                <!-- <td class="w30 text-right">&#8377; {{ c.damage_price }}</td> -->
+                            </tr>
+                        </table>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="edit-td-input active" >
+                <textarea  placeholder="Remark" name ="remark"  [(ngModel)]="parent.remark" *ngIf="parent.status == 'Pending' " #remark="ngModel"  [disabled]="parent.status == 'Received' " class="w500 h200 padding15"></textarea>
+            </div>
+            
+            <div class="cs-btn fixedd  text-right">
+                <div class="in-btn">
+                    <button mat-raised-button (click)="challanReceive()" color="primary" *ngIf="parent.status == 'Pending' ">Save</button>
+                </div>
+            </div> 
+            
+        </div>
+        <div class="fix-btn-group">
+            <ul>
+                <li (click)="print(r)">
+                    <a matRipple class="botm-btn"><i class="material-icons">print</i></a>
+                </li>
+            </ul>
+        </div>
+        
+    </div>
+    
+    <div id="print-section" hidden >
+        <table width="1024px" style=" font-family:arial; border: solid 10px #DA251C; border-bottom: solid 1px #ccc; display:block;  margin: 0; margin: 0 auto; border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+            <tr>
+                <td  width="984" style=" padding: 0px 20px; height: 50px; text-align: center;">
+                    <h2 style="width: 100%; color: #000;text-transform: capitalize; border-bottom: solid 2px #000; display: inline;">Delivery Challan</h2>
+                </td>
+            </tr>
+            <!-- <tr>
+                <td  width="984px" style="padding: 0px 20px;">
+                    <table width="944"  style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                        <tr>
+                            <td width="461">
+                                <table  width="461" style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                    <tr>
+                                        <td style="display: flex;">
+                                            <div class="logo">
+                                                <img src="/assets/img/logo/logo.png" style="width: 100px; margin-top: -42px;">
+                                            </div>
+                                            <div class="company-name" style="padding-left: 15px">
+                                                <h3 style="font-size: 18px; color: #000; font-weight:900; margin: 4px 0px; ">Mahalakshmi Logistics PVT. LTD.</h3>
+                                                <p style="margin: 0; font-size: 13px; color: #000;">An ISO 9001 : 2008 Certified Company</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                
+                                <table width="461" border="1"  cellpadding="0" bordercolor='#DA251C'   style="  margin: 20px 0px ; border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                    <tr >
+                                        <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                            <p style="padding: 10px; margin: 0px;"> Bill From</p>
+                                        </th>
+                                        
+                                        
+                                        <td width="361" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                            <p style="padding: 10px; margin: 0px;">{{parent.branch_address}} {{parent.branch_state}} {{parent.branch_district}} - {{parent.branch_pincode}}</p>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                            <p style="padding: 10px; margin: 0px;">GST NO.</p>
+                                        </th>
+                                        
+                                        <td width="361" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                            <table width="361" border="0.5"    bordercolor='#DA251C' style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                                <tr>
+                                                    <td  style="font-size:12px; "><p style="padding: 10px">06AADCM8862E1ZD</p></td>
+                                                    <td  width="100" style="font-size: 12px; background: #FBE8E7; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #da251c;"><p style="padding: 10px">Mobile</p></td>
+                                                    <td width="100" style="font-size:12px;"><p style="padding: 10px">9810430006</p></td>
+                                                    
+                                                    
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    
+                                    
+                                    <tr>
+                                        <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                            <p style="padding: 10px; margin: 0px;"> E-Mail</p>
+                                        </th>
+                                        
+                                        <td width="361" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                            <table width="361" border="0.5"    bordercolor='#DA251C' style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                                                <tr>
+                                                    <td  style="font-size:12px; "><p style="padding: 10px">fbd@mahalakshmilogistics.com</p></td>
+                                                    <td  width="72" style="font-size: 12px; background: #FBE8E7; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #da251c;"><p style="padding: 8px">PAN NO.</p></td>
+                                                    <td width="100" style="font-size:12px;"><p style="padding: 10px">AADCM8862E</p></td>
+                                                    
+                                                    
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    
+                                    
+                                    
+                                    
+                                    <tr>
+                                        <th width="100"  style=" text-align: left; font-size: 12px; background: #FBE8E7;  ">
+                                            <p style="padding: 10px; margin: 0px;"> Address</p>
+                                        </th>
+                                        
+                                        
+                                        <td width="361" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                            <p style="padding: 10px; margin: 0px;">Plot No. 53/10, NIT, Fraidabad,Haryana (9810430006)</p>
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                            </td>
+                            <td  style="vertical-align: top; width: 100%; padding-left: 13px;">
+                                
+                                <table width="450" style=" border-collapse: collapse; margin: 9px 0;">
+                                    <tr>
+                                        <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Bill To</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="450" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                            <table width="450" border="1"  cellpadding="0" style="border-color: #727272;  border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                
+                                                <tr >
+                                                    <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Consignor</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{parent.name}}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr >
+                                                    <th width="100"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">E-mail</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{parent.contact_email}}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Mobile No.</p>
+                                                    </th>
+                                                    
+                                                    <td width="353" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                        <table width="353"  style="border: 0px; border-color: #ccc; border-collapse: collapse;  box-sizing: border-box;">
+                                                            <tr>
+                                                                <td  width="133" style="font-size:12px; "><p style="padding: 10px">{{parent.contact_no}}</p></td>
+                                                                <td width="100"  style="font-size: 12px; background: #DCDCDC; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #B5B5B5;"><p style="padding: 10px">GST No.</p></td>
+                                                                <td width="120" style="font-size:12px;"><p style="padding: 10px">{{parent.gst_no}}</p></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                        <p style="padding: 10px; margin: 0px;"> Address</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="352" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{parent.addrress}} {{parent.district}} {{parent.city}} {{parent.state}} - {{parent.pincode}}</p>
+                                                    </td>
+                                                </tr>   
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr> -->
+            <tr>
+                    <td  width="984px" style="padding: 0px 20px;">
+                        <table width="944"  style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                            
+                            <tr>
+                                <td>
+                                    <table  width="944" style=" border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                        <tr>
+                                            <td style="display: flex;">
+                                                <div class="logo">
+                                                    <img src="/assets/img/logo/logo.png" style="width: 100px;     margin: 15px 0px;">
+                                                </div>
+                                                <div class="company-name" style="padding-left: 33px;">
+                                                    <h3 style="font-size:  47px; text-align: center; color: #da251c; font-weight:600; margin: 4px 0px; font-family: 'Berkshire Swash', cursive;">Mahalakshmi Logistics PVT. LTD.</h3>
+                                                    <p style="margin: 0; font-size: 14px; color: #000; text-align: center;     font-weight: bold;">(An ISO 9001 : 2008 Certified Company)</p>
+                                                    <p style="font-size: 12px; text-align: center; text-transform: capitalize;  line-height: 0px;  padding-bottom: 6px; ">Plot No 53/10 Industrial Area (Near Friends Auto) N.I.T. Faridabad (Haryana-121001) 
+                                                    </p>
+                                                    <p style="font-size: 12px; text-align: center; text-transform: capitalize; padding-bottom: 6px; line-height: 0px;">Corp Office : 53/03 , Head Office : Plot No. 53/10 , NIT , Faridabad</p>
+                                                    <p style="font-size: 12px; text-align: center; text-transform: capitalize; padding-bottom: 6px; line-height: 0px;"><span style="font-weight: 600;">Phone:  </span>0129-422700-18 <span style="    font-weight: bold;
+                                                        padding: 0px 2px;">GST NO</span>06AADCM8862E1ZD <span style="font-weight: bold;  padding: 0px 2px;"
+                                                        >PAN NO</span> AADCM8862E</p>
+                                                        <!-- <p style="font-size: 12px; text-align: center; text-transform: capitalize;  line-height: 0px;"><span style="font-weight: 600;">   E-mail: </span>fbd@mahalakshmilogistics.com<span style=" padding: 0px 2px; font-weight: bold;"> Website :</span>  www.mahalakshmilogistics.com </p> -->
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    
+                                    <td width="400" style="vertical-align: top">
+                                        
+                                        <table width="400" style=" border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Bill From</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="440" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                                    <table width="440" border="1" cellpadding="0" bordercolor='#B5B5B5'   style="   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        
+                                                        <tr >
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Name</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{parent.branch_name}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">E-mail</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{parent.branch_contact_email}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Mobile No.</p>
+                                                            </th>
+                                                            
+
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                                <table width="353" border="0"  bordercolor='#DA251C' style="border-collapse: collapse;  box-sizing: border-box;">
+                                                                    <tr>
+                                                                        <td style="font-size:12px;"> <p style="padding: 10px">{{parent.branch_contact_no}}</p></td>
+                                                                        <td width="50"  style="font-size: 12px; background: #DCDCDC; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #B5B5B5;"><p style="padding: 10px">GST</p></td>
+                                                       
+                                                                        <td width="100" style="font-size:12px;"><p style="padding: 10px">{{parent.branch_gst_no}}</p></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+
+
+                                                            <!-- <td width="324" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                                <p style="padding: 10px; margin: 0px;" >{{parent.branch_contact_no}}</p>
+                                                                
+                                                            </td> -->
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="80"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> Address</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="324" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{parent.branch_address}} {{parent.branch_state}} {{parent.branch_district}} - {{parent.branch_pincode}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </td>
+                                    <td width="461" style="vertical-align: top">
+                                        
+                                        <table width="461" style=" border-collapse: collapse; margin: 9px 0;">
+                                            <tr>
+                                                <td style="background: #FBE8E7; border: solid 1px #DA251C; padding: 10px; font-weight: bold; font-size: 14px;">Bill To</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="451" style="vertical-align: top; border: solid 1px #DA251C; padding: 8px;">
+                                                    <table width="453" border="1" cellpadding="0" bordercolor='#B5B5B5'   style="   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                        
+                                                        <tr >
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Consignor</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{parent.name}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr >
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">E-mail</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{parent.contact_email}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                                <p style="padding: 10px; margin: 0px;">Mobile No.</p>
+                                                            </th>
+                                                            
+                                                            <td width="353" style="font-size: 12px; text-align: left; font-weight: normal;">
+                                                                <table width="353" border="0"  bordercolor='#DA251C' style="border-collapse: collapse;  box-sizing: border-box;">
+                                                                    <tr>
+                                                                        <td style="font-size:12px;"> <p style="padding: 10px">{{parent.contact_no}}</p></td>
+                                                                        <td width="50"  style="font-size: 12px; background: #DCDCDC; font-weight:900; border-top:0px !important; border-bottom: 0px !important; border:solid 1px #B5B5B5;"><p style="padding: 10px">GST</p></td>
+                                                       
+                                                                        <td width="100" style="font-size:12px;"><p style="padding: 10px">{{parent.gst_no}}</p></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <th width="100"  style=" text-align: left; font-size: 12px; background: #DCDCDC;  ">
+                                                                <p style="padding: 10px; margin: 0px;"> Address</p>
+                                                            </th>
+                                                            
+                                                            
+                                                            <td width="352" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                                <p style="padding: 10px; margin: 0px;">{{parent.addrress}} {{parent.district}} {{parent.city}} {{parent.state}} - {{parent.pincode}}</p>
+                                                            </td>
+                                                        </tr>   
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+            </tr>
+           
+            <tr>
+                <td style="width: 1024px; height: 10px; background: #da251c;">
+                    
+                </td>
+            </tr> 
+            
+            <tr>
+                <td width="944" style="padding: 0px 20px;">
+                    <table width="944" style="vertical-align: top;   table-layout: fixed;border-collapse: collapse;">
+                        <tr>
+                            <td width="450"  style="vertical-align: top;  padding: 11px 0px; border: 0px; box-sizing: border-box;">
+                                
+                                <table width="450" border="1"  style="border-color: #da251c; table-layout: fixed;border-collapse: collapse; margin: 9px 0;">
+                                    <tr>
+                                        <td width="450" style="padding: 0px;">
+                                            <table style="table-layout: fixed;border-collapse: collapse;">
+                                                <tr>
+                                                    <td width="450" style="background: #FBE8E7; padding: 10px; font-weight: bold; font-size: 14px;">
+                                                        Challan Information
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td  style="vertical-align: top; padding:8px; border-right: 0; border-top: 0px;">
+                                            <table  cellpadding="0" border="1"  style=" border-color: #727272;  border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                
+                                                <tr  *ngIf="parent.agg_id">
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Agreement No</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{parent.agg_id }}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr >
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Challan No</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.invoice_id }}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr >
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Challan Date</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.date_created | date: 'dd MMM yyyy' }}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr >
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Status</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.status }}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr *ngIf="child.sale_ord_deliverd_invoice_id">
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Invoice No.</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;"> {{child.sale_ord_deliverd_invoice_id }}</p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                
+                                                
+                                                <tr *ngIf="child.sale_ord_deliverd_date_created">
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Invoice Date</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;"> {{child.sale_ord_deliverd_date_created | date: 'dd MMM yyyy' }}</p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr *ngIf="parent.p_o_n">
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">PO No.</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;"> {{child.p_o_n}}</p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                
+                                                <tr *ngIf="parent.customer_part_number">
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Customer Part No.</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;"> {{child.customer_part_number}}</p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                
+                                                <tr *ngIf="parent.hsn">
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">HSN Code</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;"> {{parent.hsn}}</p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                
+                                                
+                                            </table>
+                                        </td>
+                                        
+                                    </tr>
+                                </table> 
+                            </td>
+                            
+                            <td width="470"  style="vertical-align: top;  padding: 11px 0px; border: 0px;">
+                                
+                                <table width="470" border="1"  style="border-color: #da251c; table-layout: fixed;border-collapse: collapse; margin: 9px 0;">
+                                    <tr>
+                                        <td width="470" style="padding: 0px;">
+                                            <table style="table-layout: fixed;border-collapse: collapse;">
+                                                <tr>
+                                                    <td width="470" style="background: #FBE8E7; padding: 10px; font-weight: bold; font-size: 14px;">
+                                                        Trasport Information
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td  style="vertical-align: top; padding:8px; border-right: 0; border-top: 0px;">
+                                            <table  cellpadding="0" border="1"  style=" border-color: #727272;  border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                
+                                                
+                                                <tr >
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Driver Name</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.ve_driver_name}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr >
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Mobile No.</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.ve_mobile_no}}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr >
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background :#DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Transport Name</p>
+                                                    </th>
+                                                    
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.ve_transport}}</p>
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Vehicle Type.</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.ve_type}} </p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Vehicle No</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.ve_no}} </p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <th width="200px"  style=" text-align: left; font-size: 12px; background: #DCDCDC;">
+                                                        <p style="padding: 10px; margin: 0px;">Vehicle Freight</p>
+                                                    </th>
+                                                    
+                                                    <td width="400px" style="font-size: 12px; text-align: left; font-weight: normal; ">
+                                                        <p style="padding: 10px; margin: 0px;">{{child.ve_freight}} </p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                
+                                                
+                                                
+                                            </table>
+                                        </td>
+                                        
+                                    </tr>
+                                </table> 
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr> 
+            
+            <tr>
+                <td style="padding: 0px 20px; " width="984">
+                    <table width="944" style="table-layout: fixed; border-collapse: collapse; ">
+                        <tr>
+                            <td width="944"  style="vertical-align: top;">
+                                
+                                <table width="944" border="1" style="border-color: #727272; table-layout: fixed; border-collapse: collapse; margin: 9px 0;">
+                                    <tr>
+                                        <td colspan="2" style="background: #000000; color: #fff; border: solid 1px #000000; padding: 10px; font-weight: bold; font-size: 14px;">Part Information</td>
+                                    </tr>
+                                    
+                                    
+                                    
+                                    <tr>
+                                        <td width="944px;" colspan="2"  style="box-sizing: border-box; vertical-align: top; border: solid 1px #000000; padding: 8px;  ">
+                                            <table width="924"  cellpadding="0" border="1"   style="border-color: #727272;   border-collapse: collapse; table-layout: fixed; box-sizing: border-box; ">
+                                                
+                                                
+                                                <tr>
+                                                    <th width="50" style=" text-align: left; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;"  >Item Type</th>
+                                                    <th width="300;" style=" text-align: left; background: #DCDCDC; font-size: 12px; font-weight: bold; box-sizing: border-box; padding: 0px;" >
+                                                        <table width="300"  style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; width: 100%;">
+                                                            <tr>
+                                                                <th  style="text-align: left; border-right: solid 1px  #b5b5b5; line-height: 0px; font-size: 12px;padding-left: 8px;">Equipment Id</th>
+                                                                <th  style="text-align: left; border-right: solid 1px  #b5b5b5; line-height: 0px; font-size: 12px;padding-left: 8px;">Size</th>
+                                                                <th  style="text-align: left; line-height: 30px; padding-left: 8px; font-size: 12px;">Description</th>
+                                                            </tr>
+                                                        </table >
+                                                    </th>
+                                                    <th width="14px;" style=" text-align: center; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Qty</th>
+                                                    <th width="20px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >PPU</th>
+                                                    <th width="20px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Amount</th>
+                                                    <!-- <th width="18px;" style=" text-align: right; background: #DCDCDC; padding: 8px; font-size: 12px; font-weight: bold;" >Damage Cost</th> -->
+                                                </tr>
+                                                
+                                                
+                                                <tr *ngFor="let c of sub_child; let r = index">
+                                                    <td width="50" style=" text-align: left;  padding: 8px; font-size: 12px; ">
+                                                        <p style="margin: 4px 4px; font-weight: bold; font-size: 14px;">{{c.type}}</p>
+                                                        <span *ngIf="c.type == 'Combo' ">{{c.part_number}}</span>
+                                                    </td>
+                                                    <ng-container  *ngIf="c.type == 'Combo' ">
+                                                        <td width="300;" style=" text-align: left;   font-size: 12px;" >
+                                                            <table width="300"  style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; width: 100%;">
+                                                                <ng-container *ngFor="let part of c.combo_list; let i = index">
+                                                                    <tr [ngStyle]="{'border-bottom': c.combo_list.length ==  (i+1)  ? 'solid 0px #b5b5b5;' : 'solid 1px #b5b5b5'}" >
+                                                                        <th  style="text-align: left; border-right: solid 1px  #b5b5b5; line-height: 0px; font-size: 12px;padding-left: 8px; font-weight: normal;">{{part.part_number}} <span style="font-weight: bold;">({{part.qty}})</span></th>
+                                                                        <th  style="text-align: left; border-right: solid 1px  #b5b5b5; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;">{{part.dimensions}}</th>
+                                                                        <th  style="text-align: left;  line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal; border-bottom: 0px;">{{part.description}}</th>
+                                                                    </tr>
+                                                                </ng-container>
+                                                            </table >    
+                                                        </td>
+                                                    </ng-container>
+                                                    
+                                                    <ng-container  *ngIf="c.type == 'Part' ">
+                                                        <td width="300;" style=" text-align: left;   font-size: 12px;" >
+                                                            <table width="300"  style="table-layout: fixed; border-collapse: collapse; box-sizing: content-box; width: 100%;">
+                                                                <tr style="border-bottom: solid 1px #b5b5b5;">
+                                                                    <th  style="text-align: left; border-right: solid 1px  #b5b5b5; line-height: 0px; font-size: 12px;padding-left: 8px; font-weight: normal;">{{c.part_number}}</th>
+                                                                    <th  style="text-align: left; border-right: solid 1px  #b5b5b5; line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal;">{{c.dimensions}}</th>
+                                                                    <th  style="text-align: left;   line-height: 30px; padding-left: 8px; font-size: 12px; font-weight: normal; border-bottom: 0px;">{{c.description}}</th>
+                                                                </tr>
+                                                            </table >    
+                                                        </td>
+                                                    </ng-container>
+                                                    
+                                                    <td width="14px;" style=" text-align: center; padding: 8px; font-size: 12px;" >{{c.qty}}</td>
+                                                    <td width="20px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >&#8377; {{c.rental_price}}</td>
+                                                    <td width="20px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >&#8377; {{c.deliver_rantal}}</td>
+                                                    <!-- <td width="18px;" style=" text-align: right;  padding: 8px; font-size: 12px;" >&#8377; {{c.damage_price}}</td> -->
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        
+                                    </tr>
+                                </table> 
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr> 
+            
+            <tr >
+                <td style="padding: 0 20px; ">
+                    <table style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                        <td style="width: 462px;background: #FBE8E7; font-size: 12px; height: 54px; display:flex; align-items: center; justify-content: center; padding: 0 10px; line-height: 18px; border: solid 1px #DA251C; margin: 20px 0;">
+                            <p><span style="font-size:14px; font-weight:bold;">Note :</span> These Re-usable packaging Boxes are for reuse on Rentel Basis and not for Sale.</p>
+                            
+                        </td>
+                        <td *ngIf="parent.remark" style="width: 462px;background: #FBE8E7; font-size: 12px; height: 54px; display:flex; align-items: center; text-align: left; padding: 0 10px; line-height: 18px; border: solid 1px #DA251C; margin: 20px 0;">
+                            <p><span style="font-size:14px; font-weight:bold;">Remark :</span> {{parent.remark}}</p>
+                            
+                        </td>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="padding: 0px 20px;">
+                    <table>
+                        <td>
+                            <p style="font-size:14px; font-weight:bold;">Terms and Conditions :</p>
+                            
+                            <ul style="margin: 0px; padding: 0px; list-style: none;">
+                                <li>
+                                    <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px;">1. Please pay by Payee A/c Cheque/DD/NEFT/RTGS only</p>
+                                </li>
+                                <li>
+                                    <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px;">2. If payment is not made within 15 days interest @ 15% per annum will charged </p>
+                                </li>
+                                <li>
+                                    <p style="font-size: 12px; color: #6f6f6f; padding-left: 3px; ">3. All Disputes will be settled at faridabad Jurisdiction </p>
+                                </li>
+                            </ul>
+                        </td>
+                    </table>
+                </td>
+            </tr>
+            
+            
+            <tr> 
+                <td style="height: 200px; padding: 0 20px; box-sizing: border-box; ">
+                    <table style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                        <td>
+                            <!-- <p style="font-size: 24px; font-weight: bold; text-align: right; width: 937px;">Mahalakshmi Logistics PVT. LTD.</p> -->
+                        </td>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="padding: 0 20px; width: 984px; padding-bottom: 25px;">
+                    <table width="938" style="border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
+                        <td>
+                            <ul style="margin: 0; padding: 0; list-style: none; display: inline-flex;">
+                                <li style=" width: 258px; display: flex; height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Party Signature</li>
+                                <li style=" width: 258px; display: flex; height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Checked By</li>
+                                <li style=" width: 258px; display: flex; height: 40px; align-items: flex-end; padding: 20px; font-size: 14px; font-weight: bold; margin-right: 20px;">Authorised Signatory</li>
+                            </ul>
+                        </td>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div> 
+    
+</div>
+
+
+
+
+<div class="h100"></div>

@@ -1,0 +1,359 @@
+<div class="main-container">
+  <div class="master-heading">
+    <div class="heading">
+      <h1>CREATE NEW AGREEMNT</h1>
+    </div>
+  </div>
+  
+  
+  <div class="cs-spinner full-page" *ngIf = "loading_list">
+    <div class="outer">
+      <div class="innear">
+        <mat-spinner></mat-spinner>
+        <P>LOADING . . .</P>
+      </div>
+    </div>
+  </div>
+  <div  class="cs-container pt60">
+    <div class="cs-row" *ngIf="false">
+      <div class="right-data left-right-space">
+        <div class="contst">
+          <div class="cs-heading">
+            <h2>Agreement Type: <span>Select Type</span></h2>
+          </div>
+          
+          <div class="select-radio">
+            <div class="control-field col-6">
+              <ul>
+                <mat-radio-group class="example-radio-group" [(ngModel)]="orderData.type">
+                  <li>
+                    <mat-radio-button class="example-radio-button" value="Parts">
+                      <p>Parts</p>
+                    </mat-radio-button>
+                  </li>
+                  <li>
+                    <mat-radio-button class="example-radio-button" value="Combo">
+                      <p>Combo</p>
+                    </mat-radio-button>
+                  </li>
+                </mat-radio-group>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="cs-btn fixedd mt32 text-right">
+          <div class="in-btn">
+            <a mat-raised-button color="primary" (click)="selectAggreementTypeType()">Next</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <ng-container >
+      <div class="row" >
+        <div class="col-12">
+          <div class="right-data pl0">
+            <div class="contst h420 padding0">
+              <mat-dialog-content class="convert-franchies-modle">
+                <div class="m-body">
+                  <div class="row">
+                    <div class="col-3 plan-list step1 h420 shadow-none">
+                      <div class="head">
+                        <div class="csn-heading"  [ngClass]="{'active':active.user1==true}">
+                          
+                          <h2>Consignor</h2>
+                          
+                          <button class="search-icon" (click)="toggleterritory1('user1','open')" >
+                            <i class="material-icons">search</i>
+                          </button>
+                          
+                          <div class="search">
+                            
+                            <i class="material-icons sc-icon">search</i>
+                            <input style="width: 100% !important;" type="text" placeholder="search..."  (input)="getItemscheckin('con2',search2.search1)" #search1="ngModel" [(ngModel)]="search2.search1">
+                            
+                            <button (click)="toggleterritory1('user1','close')">
+                              <i class="material-icons">clear</i>
+                            </button>
+                          </div>
+                        </div>
+                        
+                      </div>
+                      <div class="listing">
+                        <mat-radio-group class="step1" [(ngModel)]="orderData.consigner_id"  (change)="getMaster()"  >
+                          <mat-radio-button *ngFor="let row of consingerList" [value]="row.id" >
+                            <span class="name-counter" *ngIf="row.name">{{row.name?row.name[0].toUpperCase():''}}</span>
+                            <div class="txt-box">
+                              <p *ngIf="row.name">{{row.name | titlecase}}</p>
+                              <p>{{row.contact_no}}</p>
+                            </div>
+                          </mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                    </div>
+                    <div class="col-6" *ngIf="orderData.consigner_id"> 
+                      <div class="form-field " *ngIf="orderData.consigner_id">
+                        <div class="row">
+                          
+                          <div class="col-12">
+                            <div class="agriment">
+                              <h4>AGREEMENT DETAIL</h4>
+                            </div>
+                          </div>
+              
+                          <div class="control-field col-6">
+                            <mat-form-field class="cs-input cs-date-picker">
+                              <input  placeholder="Agreement Start Date" [(ngModel)]="orderData.start_date" name="start_date" matInput [matDatepicker]="picker3" >
+                              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                              <mat-datepicker #picker3></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                          <div class="control-field col-6">   
+                            <mat-form-field class="cs-input cs-date-picker">
+                              <input  placeholder="Agreement End Date" [(ngModel)]="orderData.end_date" name="end_date" matInput [matDatepicker]="picker1">
+                              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                              <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                          <div class="row ">
+                          <div class="control-field col-4">
+                            <mat-form-field class="example-full-width cs-input">
+                              <input matInput placeholder="Title" name="title" [(ngModel)] = "orderData.title" #title="ngModel" >
+                            </mat-form-field>
+                          </div>
+               
+                          <div class="control-field col-4">
+                            <mat-form-field class="cs-multi-select"   >
+                              <mat-select placeholder="Payment Term" name="Payment Term" [(ngModel)]="orderData.payment_term" >
+                                <mat-option value="Againest Delivery"> Againest Delivery</mat-option>
+                                <mat-option value="Againest Pickup"> Againest Pickup</mat-option>
+                                <mat-option value="Monthly Billing"> Monthly Billing</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="control-field col-4">
+                              <mat-form-field class="example-full-width cs-input">
+                                <input matInput placeholder="Customer Part No." name="customer_part_number" [(ngModel)] = "orderData.customer_part_number" #customer_part_number="ngModel" >
+                              </mat-form-field>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                          <div class="control-field col-4">
+                            <mat-form-field class="cs-multi-select" >
+                              <mat-select placeholder="Payable From" name="Payable From" [(ngModel)]="orderData.payment_from" >
+                                <mat-option value="Consignor" *ngIf="!orderData.payment_term || orderData.payment_term ==  'Againest Delivery' || orderData.payment_term ==  'Monthly Billing' "> Consignor</mat-option>
+                                <mat-option value="Consignee" *ngIf="orderData.payment_term !=  'Againest Delivery' "> Consignee</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          
+                          <div class="control-field col-4">
+                            <mat-form-field class="cs-multi-select" >
+                              <mat-select placeholder="Branch" name="Branch" [(ngModel)]="orderData.branch_id" >
+                                <mat-option  *ngFor="let row of branchesList" [value]="row.id" > {{row.branch_name | titlecase}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="control-field col-4">
+                              <mat-form-field class="example-full-width cs-input">
+                                <input matInput placeholder="PO No." name="p_o_n" [(ngModel)] = "orderData.p_o_n" #p_o_n="ngModel" >
+                              </mat-form-field>
+                            </div>
+
+                        </div>
+
+                
+                        
+                      </div>
+                      
+                      <div class="row" >
+                        <div class="col-12">
+                          <div class="form-field flex-cl">
+                            <div class="row">
+                                <div class="field-type">
+                                    <div class="control-field w120 ">
+                                      <mat-form-field class="cs-multi-select">
+                                        <mat-select placeholder="Item Type" name="type" [(ngModel)]="orderData.type" (selectionChange)="getMaster()">
+                                          <mat-option value="Part" >Part</mat-option>
+                                          <mat-option value="Combo" >Combo</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </div>
+                            </div>
+                            </div>
+                            <form name="forms" (ngSubmit)="s.form.valid ? AddItem(s) : '' " #s="ngForm">
+                              <div class="row ">  
+                                
+                               
+                                <div class="field-type">
+                                  
+                                  <div class="control-field">
+                                    <div class="ng-autocomplete w200 mt5">
+                                      <label>
+                                        {{ orderData.type == 'Part' ?  'Equipment Id*' : 'Combo*' }}
+                                      </label>
+                                      <ng-autocomplete
+                                      [data]="parts"
+                                      [searchKeyword]="keyword"
+                                      (selected)='selectEvent($event)'
+                                      (inputChanged)='onChangeSearch($event)'
+                                      (inputFocused)='onFocused($event)'
+                                      [itemTemplate]="itemTemplate"
+                                      [notFoundTemplate]="notFoundTemplate">                                 
+                                    </ng-autocomplete>
+                                    <ng-template #itemTemplate let-item>
+                                      <a [innerHTML]="item.part_number"></a>
+                                    </ng-template>
+                                    <ng-template #notFoundTemplate let-notFound>
+                                      <div [innerHTML]="notFound"></div>
+                                    </ng-template>
+                                  </div>
+                                </div>
+
+                                <ng-container *ngIf="data.part_number">
+                                  <div class="control-field  w70">
+                                    <mat-form-field class="example-full-width cs-input">
+                                      <input matInput placeholder="QTY."  maxlength="5" min="1" (keypress)="numeric_Number($event)" name="qty" [(ngModel)]="data.qty" (input)="getAmount(data.qty,data.rental_price)"  required>
+                                    </mat-form-field>
+                                  </div>
+                                  <div class="control-field w104">
+                                    <mat-form-field class="example-full-width cs-input">
+                                      <input matInput placeholder="Rentel Price"  (keypress)="numeric_Number($event)"  maxlength="8" min="1"  name="rental_price" [(ngModel)]="data.rental_price" (input)="getAmount(data.qty,data.rental_price)" required>
+                                    </mat-form-field>
+                                  </div>
+                                  <div class="control-field w120">
+                                    <mat-form-field class="example-full-width cs-input">
+                                      <input matInput placeholder="Damage Price"  name="damage_price" [(ngModel)]="data.damage_price" >
+                                    </mat-form-field>
+                                  </div>               
+                                  <div class="tj-button wp100 pr10" style="text-align: right">
+                                    <div class="plus-btn mt12 ml10">
+                                      <button class="h45" type="submit"  mat-raised-button color="warn" style="color: #fff;"  >Add to List</button>
+                                    </div>
+                                  </div>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    
+                    
+                  </div>
+                  <div class="col-3 plan-list step1 h420 shadow-none"  *ngIf="orderData.consigner_id">
+                    <div class="head">
+                      <div class="csn-heading"  [ngClass]="{'active':active.user2==true}">
+                        
+                        <h2>Consignee</h2>
+                        
+                        <button class="search-icon" (click)="toggleterritory2('user2','open')" >
+                          <i class="material-icons">search</i>
+                        </button>
+                        
+                        <div class="search">
+                          
+                          <i class="material-icons sc-icon">search</i>
+                          <input style="width: 100% !important;" type="text" placeholder="search..."  (input)="getItemscheckin('con1',search2.search2)" #search1="ngModel" [(ngModel)]="search2.search2">
+                          <button (click)="toggleterritory2('user2','close')">
+                            <i class="material-icons">clear</i>
+                          </button>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <div class="listing">
+                      <section  >
+                        <ng-container *ngFor="let row of consingerList2">
+                          <mat-checkbox     (change)="addConsignee($event,row.id)" *ngIf="orderData.consigner_id != row.id " >
+                            <span class="name-counter" *ngIf="row.name">{{row.name?row.name[0].toUpperCase():''}}</span>
+                            <div class="txt-box">
+                              <p *ngIf="row.name">{{row.name | titlecase}}</p>
+                              <p>{{row.contact_no}}</p>
+                            </div>
+                          </mat-checkbox>
+                        </ng-container>
+                      </section >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-dialog-content>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mt15" *ngIf="orderItemList.length > 0">
+      <div class="col-12">
+        <div class="cs-table left-right-15" >
+          <div class="header">
+            <table>
+              <tr>
+                <th class="w80">Item Type</th>
+                <th class="w140">Item Name</th>
+                <th class="w140">Size</th>
+                <th class="w150">Description</th>
+                <th class="w80 text-center">Qty</th>
+                <th class="w140">Rentel Price</th>
+                <th class="w120 text-right">Total Rentel</th>
+                <th class="w120 text-right">Damage Price</th>
+              </tr>
+            </table>
+          </div>
+          <div class="table-container">
+            <div class="table-body">
+              <table>
+                <tr *ngFor="let raw of orderItemList; let d = index">
+                  <td class="w80">{{ raw.type }}</td>
+                  <td class="w140">{{ raw.part_number }}</td>
+                  <td class="w140">{{ raw.dimensions }}</td>
+                  <td class="w150">{{ raw.description }}</td>
+                  <td class="w80 text-center">{{ raw.qty }}</td>
+                  <td class="w140 ">{{raw.rental_price}}</td>
+                  <td class="w120 text-right">&#x20B9;  {{ raw.amount }}</td>
+                  <td class="w120 text-right"> {{ raw.damage_price }}
+                    <div class="action-btns">
+                      <div class="outer">
+                        <div class="innear">
+                          <button type="submit" (click)="RemoveItem(d,raw.amount)" mat-button class="delete"><i class="material-icons">delete_sweep</i> Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        
+        
+      </div>
+    </div>   
+    
+    
+    
+    
+    <div *ngIf="orderItemList.length && orderData.consigner_id" class="row">
+      <div class="col-12">
+        <div class="dubble-btn">
+          <div class="cs-btn mt32 mr12 text-right" [ngClass]="{loading: savingData}">
+            <div class="in-btn " >
+              <button (click)="submit_sales_order()"  [disabled]="savingData" mat-raised-button color="warn">SAVE</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </ng-container>
+  
+</div>
+</div>
+<div class="h100"></div>
