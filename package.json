@@ -49,7 +49,7 @@
     "ngx-editor": "^4.1.0",
     "ngx-push-notifications": "^7.0.2",
     "node-sass": "^4.12.0",
-    "npm": "^6.5.0",
+    "npm": "^6.14.6",
     "num-words": "^1.0.1",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.5.2",
